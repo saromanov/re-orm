@@ -1,4 +1,4 @@
-package reorm
+package serializer
 
 // Serializer defines interface for serialization of structs
 type Serializer interface {
