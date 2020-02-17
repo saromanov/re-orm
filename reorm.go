@@ -1,9 +1,8 @@
 package reorm
 
 import (
-	"fmt"
-
 	"github.com/go-redis/redis"
+	"github.com/saromanov/re-orm/internal/storage"
 )
 
 // ReOrm provides implementation of the Redis ORM
@@ -25,8 +24,5 @@ func New(c *Config) *ReOrm {
 
 // Save provides saving of the data. Also, it returns stored id
 func (r *ReOrm) Save(data interface{}) (string, error) {
-	if ok := isStruct(data); !ok {
-		return "", fmt.Errorf("save: input valus is a not struct")
-	}
-	return "", nil
+	return storage.Save(data)
 }

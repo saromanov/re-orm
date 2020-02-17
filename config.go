@@ -4,4 +4,5 @@ package reorm
 type Config struct {
 	Address  string
 	Password string
+	Serializer Serializer
 }
