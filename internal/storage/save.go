@@ -8,7 +8,7 @@ import (
 
 // Save provides saving of the object
 func Save(data interface{}) (string, error) {
-	if ok := reflect.IsStruct(data); !ok {
+	if ok := reflect.IsAvailableForSave(data); !ok {
 		return "", fmt.Errorf("save: input valus is a not struct")
 	}
 	return "", nil
