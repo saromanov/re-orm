@@ -30,6 +30,9 @@ func getFields(d interface{}) (*models.Data, error) {
 		f := s.Field(i)
 		fmt.Printf("%d: %s %s = %v\n", i,
 			typeOfT.Field(i).Name, f.Type(), f.Interface())
+		if typeOfT.Field(i).Name == "ID" {
+			resp.ID = f.Interface()
+		}
 	}
 	if resp.ID == nil {
 		return nil, fmt.Errorf("id is not defined")
