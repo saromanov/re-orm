@@ -24,5 +24,5 @@ func New(c *Config) *ReOrm {
 
 // Save provides saving of the data. Also, it returns stored id
 func (r *ReOrm) Save(data interface{}) (string, error) {
-	return storage.Save(data)
+	return storage.Save(r.client, data)
 }

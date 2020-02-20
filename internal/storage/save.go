@@ -3,12 +3,14 @@ package storage
 import (
 	"fmt"
 
+	"github.com/go-redis/redis"
+	"github.com/saromanov/re-orm/internal/models"
 	"github.com/saromanov/re-orm/internal/reflect"
 	"github.com/saromanov/re-orm/internal/serializer/json"
 )
 
 // Save provides saving of the object
-func Save(d interface{}) (string, error) {
+func Save(client *redis.Client, d interface{}) (string, error) {
 	if ok := reflect.IsAvailableForSave(d); !ok {
 		return "", fmt.Errorf("save: input valus is a not struct")
 	}
@@ -18,19 +20,21 @@ func Save(d interface{}) (string, error) {
 		return "", fmt.Errorf("unable to get fields from provided data: %v", err)
 	}
 
-	fmt.Println("FIELDS: ", fields)
+	if err := save(client, fields, d); err != nil {
+		return "", fmt.Errorf("unable to save data: %v")
+	}
 	return "", nil
 }
 
 // save provides saving of the model
-func save(ID interface{}, d interface{}) error {
+func save(client *redis.Client, fields *models.Data, d interface{}) error {
 	ser := json.Serializer{}
-	key := fmt.Sprintf("id_%v", ID)
+	key := fmt.Sprintf("id_%v", fields.ID)
 	result, err := ser.Marshal(d)
 	if err != nil {
-		return fmt.Errorf("unable to marshal data with id %v: %v", d.ID, err)
+		return fmt.Errorf("unable to marshal data with id %v", err)
 	}
-	err = r.client.Do("SET", key, string(result)).Err()
+	err = client.Do("SET", key, string(result)).Err()
 	if err != nil {
 		return fmt.Errorf("unable to set data: %v", err)
 	}
