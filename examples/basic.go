@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	reorm "github.com/saromanov/re-orm"
 )
 
@@ -17,5 +18,5 @@ func main() {
 		Color: "Black",
 	}
 	r := reorm.New(&reorm.Config{})
-	r.Save(c)
+	fmt.Println(r.Save(c))
 }

@@ -39,5 +39,11 @@ func getFields(d interface{}) (*models.Data, error) {
 
 // isStruct provides checking if input data is a struct
 func isStruct(d interface{}) bool {
-	return reflect.ValueOf(d).Kind() == reflect.Struct
+	switch reflect.ValueOf(d).Kind() {
+	case reflect.Struct:
+		return true
+	case reflect.Ptr:
+		return reflect.ValueOf(d).Type().Elem().Kind() == reflect.Struct
+	}
+	return false
 }
