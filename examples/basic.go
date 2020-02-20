@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	reorm "github.com/saromanov/re-orm"
 )
 
@@ -19,4 +20,10 @@ func main() {
 	}
 	r := reorm.New(&reorm.Config{})
 	fmt.Println(r.Save(c))
+
+	var resp Car
+	if err := r.GetByID(1, &resp); err != nil {
+		panic(err)
+	}
+	fmt.Println("RESP: ", resp)
 }

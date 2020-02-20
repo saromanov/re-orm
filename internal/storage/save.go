@@ -21,7 +21,7 @@ func Save(client *redis.Client, d interface{}) (string, error) {
 	}
 
 	if err := save(client, fields, d); err != nil {
-		return "", fmt.Errorf("unable to save data: %v")
+		return "", fmt.Errorf("unable to save data: %v", err)
 	}
 	return "", nil
 }

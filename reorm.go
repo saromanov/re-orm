@@ -26,3 +26,8 @@ func New(c *Config) *ReOrm {
 func (r *ReOrm) Save(data interface{}) (string, error) {
 	return storage.Save(r.client, data)
 }
+
+// GetByID provides getting of the data by id
+func (r *ReOrm) GetByID(ID, data interface{}) error {
+	return storage.Get(r.client, ID, data)
+}
