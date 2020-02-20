@@ -25,13 +25,13 @@ func GetFields(d interface{}) (*models.Data, error) {
 func getFields(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d).Elem()
 	typeOfT := s.Type()
-	resp := &models.Data{}
+	resp := models.NewData()
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
-		fmt.Printf("%d: %s %s = %v\n", i,
-			typeOfT.Field(i).Name, f.Type(), f.Interface())
 		if typeOfT.Field(i).Name == "ID" {
 			resp.ID = f.Interface()
+		} else {
+			resp.Values[typeOfT.Field(i).Name] = f.Interface()
 		}
 	}
 	if resp.ID == nil {
