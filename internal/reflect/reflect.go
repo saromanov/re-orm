@@ -26,7 +26,7 @@ func getFields(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d).Elem()
 	typeOfT := s.Type()
 	resp := models.NewData()
-	resp.Name = reflect.ValueOf(d).String()
+	resp.Name = fmt.Sprintf("%T", d)
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if typeOfT.Field(i).Name == "ID" {
