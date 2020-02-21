@@ -21,6 +21,15 @@ func GetFields(d interface{}) (*models.Data, error) {
 	return getFields(d)
 }
 
+// GetFullFields provides getting non empty fields from the struct
+func GetFullFields(d interface{}) (*models.Data, error) {
+	if ok := IsAvailableForSave(d); !ok {
+		return nil, fmt.Errorf("unable to save provided data")
+	}
+
+	return getFullFields(d), nil
+}
+
 // getFields returns name of fields from the structure
 func getFields(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d).Elem()
@@ -39,6 +48,21 @@ func getFields(d interface{}) (*models.Data, error) {
 		return nil, fmt.Errorf("id is not defined")
 	}
 	return resp, nil
+}
+
+// getFullFields retruns filled fields from the input data
+func getFullFields(d interface{}) *models.Data {
+	s := reflect.ValueOf(d).Elem()
+	typeOfT := s.Type()
+	resp := models.NewData()
+	resp.Name = fmt.Sprintf("%T", d)
+	for i := 0; i < s.NumField(); i++ {
+		f := s.Field(i)
+		if f.Interface() != nil {
+			resp.Values[typeOfT.Field(i).Name] = f.Interface()
+		}
+	}
+	return resp
 }
 
 // isStruct provides checking if input data is a struct
