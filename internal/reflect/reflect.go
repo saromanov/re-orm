@@ -9,7 +9,7 @@ import (
 
 // IsAvailableForSave provides check if input data is available for save
 func IsAvailableForSave(d interface{}) bool {
-	return isStruct(d)
+	return isStruct(d) || isMap(d)
 }
 
 // GetFields provides getting fields from the struct
@@ -26,6 +26,7 @@ func getFields(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d).Elem()
 	typeOfT := s.Type()
 	resp := models.NewData()
+	resp.Name = reflect.ValueOf(d).String()
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if typeOfT.Field(i).Name == "ID" {
@@ -37,6 +38,7 @@ func getFields(d interface{}) (*models.Data, error) {
 	if resp.ID == nil {
 		return nil, fmt.Errorf("id is not defined")
 	}
+	fmt.Println("RESSS: ", resp.Name)
 	return resp, nil
 }
 
@@ -47,6 +49,16 @@ func isStruct(d interface{}) bool {
 		return true
 	case reflect.Ptr:
 		return reflect.ValueOf(d).Type().Elem().Kind() == reflect.Struct
+	}
+	return false
+}
+
+func isMap(d interface{}) bool {
+	switch reflect.ValueOf(d).Kind() {
+	case reflect.Map:
+		return true
+	case reflect.Ptr:
+		return reflect.ValueOf(d).Type().Elem().Kind() == reflect.Map
 	}
 	return false
 }

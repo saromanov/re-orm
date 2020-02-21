@@ -7,4 +7,7 @@ type Config struct {
 	Address    string
 	Password   string
 	Serializer serializer.Serializer
+	// KeyPrefix returns prefix where data will be saved
+	// for example "prefix_id"
+	KeyPrefix string
 }
