@@ -38,7 +38,6 @@ func getFields(d interface{}) (*models.Data, error) {
 	if resp.ID == nil {
 		return nil, fmt.Errorf("id is not defined")
 	}
-	fmt.Println("RESSS: ", resp.Name)
 	return resp, nil
 }
 
