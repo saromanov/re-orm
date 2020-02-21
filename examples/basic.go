@@ -26,4 +26,11 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("RESP: ", resp)
+	if err := r.DeleteByID(1); err != nil {
+		panic(err)
+	}
+	if err := r.GetByID(1, &resp); err != nil {
+		panic(err)
+	}
+	fmt.Println("RESP: ", resp)
 }

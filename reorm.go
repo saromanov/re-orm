@@ -31,3 +31,8 @@ func (r *ReOrm) Save(data interface{}) (string, error) {
 func (r *ReOrm) GetByID(ID, data interface{}) error {
 	return storage.Get(r.client, ID, data)
 }
+
+// DeleteByID provides removing of the data by id
+func (r *ReOrm) DeleteByID(ID interface{}) error {
+	return storage.DeleteByID(r.client, ID)
+}
