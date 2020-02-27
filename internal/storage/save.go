@@ -38,5 +38,22 @@ func save(client *redis.Client, fields *models.Data, d interface{}) error {
 	if err != nil {
 		return fmt.Errorf("unable to set data: %v", err)
 	}
+	if err := saveIndexes(client, fields, key); err != nil {
+		return fmt.Errorf("unable to create index: %v", err)
+	}
+	return nil
+}
+
+// saveIndexes provides saving of indexes
+func saveIndexes(client *redis.Client, fields *models.Data, parentID string) error {
+	indexes := fields.GetIndexes()
+	if len(indexes) == 0 {
+		return nil
+	}
+	for _, key := range indexes {
+		if err := client.HSet(key, "index", parentID).Err(); err != nil {
+			return fmt.Errorf("unable to create index %s: %v", key, err)
+		}
+	}
 	return nil
 }

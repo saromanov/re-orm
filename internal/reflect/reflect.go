@@ -3,6 +3,7 @@ package reflect
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/saromanov/re-orm/internal/models"
 )
@@ -42,16 +43,26 @@ func getFields(d interface{}) (*models.Data, error) {
 			resp.ID = f.Interface()
 			continue
 		}
+		tags := dataType.Field(i).Tag.Get("reorm")
 		if isStructField(dataType.Field(i)) {
 
 		} else {
-			resp.Values[dataType.Field(i).Name] = f.Interface()
+			resp.AddValue(dataType.Field(i).Name, f.Interface())
+			if strings.Contains(tags, "index") {
+				resp.AddIndex(dataType.Field(i).Name)
+			}
 		}
 	}
 	if resp.ID == nil {
 		return nil, fmt.Errorf("id is not defined")
 	}
 	return resp, nil
+}
+
+// parseTags provides checks of the tags at the input
+// and if it contains any tags, its adding to the result
+func parseTags(tags string, data *models.Data) {
+
 }
 
 // check if struct contains struct field
