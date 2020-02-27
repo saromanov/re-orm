@@ -23,7 +23,7 @@ func GetFields(d interface{}) (*models.Data, error) {
 }
 
 // GetFullFields provides getting non empty fields from the struct
-func GetFullFields(d interface{}) (*models.Data, error) {
+func GetFullFields(d interface{}) (*models.Search, error) {
 	if ok := IsAvailableForSave(d); !ok {
 		return nil, fmt.Errorf("unable to save provided data")
 	}
@@ -73,15 +73,16 @@ func isStructField(sf reflect.StructField) bool {
 }
 
 // getFullFields retruns filled fields from the input data
-func getFullFields(d interface{}) *models.Data {
+func getFullFields(d interface{}) *models.Search {
 	s := reflect.ValueOf(d).Elem()
 	typeOfT := s.Type()
-	resp := models.NewData()
+	resp := &models.Search{}
+	resp.Fields = map[string]interface{}{}
 	resp.Name = fmt.Sprintf("%T", d)
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if f.Interface() != nil && !f.IsZero() {
-			resp.Values[typeOfT.Field(i).Name] = f.Interface()
+			resp.Fields[typeOfT.Field(i).Name] = f.Interface()
 		}
 	}
 	return resp

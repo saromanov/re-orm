@@ -19,14 +19,16 @@ func Find(client *redis.Client, d interface{}, resp interface{}) error {
 		return fmt.Errorf("unable to get fields from provided data: %v", err)
 	}
 
-	fmt.Println("FIELS: ", fields)
-	if len(fields.Values) == 0 {
+	if len(fields.Fields) == 0 {
 		return fmt.Errorf("input data is not provided")
 	}
 
 	return find(client, fields, d, resp)
 }
 
-func find(client *redis.Client, fields *models.Data, d interface{}, resp interface{}) error {
+func find(client *redis.Client, s *models.Search, d interface{}, resp interface{}) error {
+	for _, f := range s.Fields {
+		fmt.Println(f)
+	}
 	return nil
 }
