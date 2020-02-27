@@ -19,6 +19,7 @@ func Find(client *redis.Client, d interface{}, resp interface{}) error {
 		return fmt.Errorf("unable to get fields from provided data: %v", err)
 	}
 
+	fmt.Println("FIELS: ", fields)
 	if len(fields.Values) == 0 {
 		return fmt.Errorf("input data is not provided")
 	}

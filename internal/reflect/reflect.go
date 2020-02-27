@@ -40,12 +40,12 @@ func getFields(d interface{}) (*models.Data, error) {
 		f := s.Field(i)
 		if dataType.Field(i).Name == "ID" {
 			resp.ID = f.Interface()
-		} else {
-			if isStructField(dataType.Field(i)) {
+			continue
+		}
+		if isStructField(dataType.Field(i)) {
 
-			} else {
-				resp.Values[dataType.Field(i).Name] = f.Interface()
-			}
+		} else {
+			resp.Values[dataType.Field(i).Name] = f.Interface()
 		}
 	}
 	if resp.ID == nil {
@@ -56,8 +56,9 @@ func getFields(d interface{}) (*models.Data, error) {
 
 // check if struct contains struct field
 func isStructField(sf reflect.StructField) bool {
-	return sf.Type.Kind() == reflect.Struct ||
-		(sf.Type.Kind() == reflect.Ptr && sf.Type.Elem().Kind() == reflect.Struct)
+	t := sf.Type
+	return t.Kind() == reflect.Struct ||
+		(t.Kind() == reflect.Ptr && t.Elem().Kind() == reflect.Struct)
 }
 
 // getFullFields retruns filled fields from the input data
@@ -68,7 +69,7 @@ func getFullFields(d interface{}) *models.Data {
 	resp.Name = fmt.Sprintf("%T", d)
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
-		if f.Interface() != nil {
+		if f.Interface() != nil && !f.IsZero() {
 			resp.Values[typeOfT.Field(i).Name] = f.Interface()
 		}
 	}
