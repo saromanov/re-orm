@@ -33,21 +33,31 @@ func GetFullFields(d interface{}) (*models.Data, error) {
 // getFields returns name of fields from the structure
 func getFields(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d).Elem()
-	typeOfT := s.Type()
+	dataType := s.Type()
 	resp := models.NewData()
 	resp.Name = fmt.Sprintf("%T", d)
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
-		if typeOfT.Field(i).Name == "ID" {
+		if dataType.Field(i).Name == "ID" {
 			resp.ID = f.Interface()
 		} else {
-			resp.Values[typeOfT.Field(i).Name] = f.Interface()
+			if isStructField(dataType.Field(i)) {
+
+			} else {
+				resp.Values[dataType.Field(i).Name] = f.Interface()
+			}
 		}
 	}
 	if resp.ID == nil {
 		return nil, fmt.Errorf("id is not defined")
 	}
 	return resp, nil
+}
+
+// check if struct contains struct field
+func isStructField(sf reflect.StructField) bool {
+	return sf.Type.Kind() == reflect.Struct ||
+		(sf.Type.Kind() == reflect.Ptr && sf.Type.Elem().Kind() == reflect.Struct)
 }
 
 // getFullFields retruns filled fields from the input data
