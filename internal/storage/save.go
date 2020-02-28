@@ -61,6 +61,7 @@ func saveIndexes(client *redis.Client, fields *models.Data, parentID string) err
 		if err := client.HSet(key, "value", data).Err(); err != nil {
 			return fmt.Errorf("unable to create index %s: %v", key, err)
 		}
+		client.LPush(key)
 	}
 	return nil
 }

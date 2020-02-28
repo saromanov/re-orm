@@ -1,6 +1,8 @@
 package reorm
 
 import (
+	"fmt"
+
 	"github.com/go-redis/redis"
 	"github.com/saromanov/re-orm/internal/storage"
 )
@@ -23,8 +25,13 @@ func New(c *Config) *ReOrm {
 }
 
 // Save provides saving of the data. Also, it returns stored id
-func (r *ReOrm) Save(data interface{}) (string, error) {
-	return storage.Save(r.client, data)
+func (r *ReOrm) Save(data ...interface{}) (string, error) {
+	for _, d := range data {
+		if _, err := storage.Save(r.client, d); err != nil {
+			return "", fmt.Errorf("unable to save data: %v", err)
+		}
+	}
+	return "", nil
 }
 
 // GetByID provides getting of the data by id
