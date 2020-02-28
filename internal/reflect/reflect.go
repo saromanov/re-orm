@@ -36,7 +36,7 @@ func getFields(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d).Elem()
 	dataType := s.Type()
 	resp := models.NewData()
-	resp.Name = fmt.Sprintf("%T", d)
+	resp.Name = getName(fmt.Sprintf("%T", d))
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if dataType.Field(i).Name == "ID" {
@@ -57,6 +57,14 @@ func getFields(d interface{}) (*models.Data, error) {
 		return nil, fmt.Errorf("id is not defined")
 	}
 	return resp, nil
+}
+
+func getName(name string) string {
+	splitter := strings.Split(name, ".")
+	if len(splitter) == 1 {
+		return name
+	}
+	return splitter[1]
 }
 
 // parseTags provides checks of the tags at the input
