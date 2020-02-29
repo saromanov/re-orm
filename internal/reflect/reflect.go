@@ -47,9 +47,10 @@ func getFields(d interface{}) (*models.Data, error) {
 		if isStructField(dataType.Field(i)) {
 
 		} else {
-			resp.AddValue(dataType.Field(i).Name, f.Interface())
+			saveKey := dataType.Field(i).Name
+			resp.AddValue(saveKey, f.Interface())
 			if strings.Contains(tags, "index") {
-				resp.AddIndex(fmt.Sprintf("%s_%s_%v", resp.Name, dataType.Field(i).Name, f.Interface()), resp.Name)
+				resp.AddIndex(fmt.Sprintf("%s_%s_%v", resp.Name, dataType.Field(i).Name, f.Interface()), saveKey)
 			}
 		}
 	}
