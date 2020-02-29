@@ -59,7 +59,11 @@ func getFields(d interface{}) (*models.Data, error) {
 	return resp, nil
 }
 
+// getting "clear" name from the struct
 func getName(name string) string {
+	if !strings.Contains(name, ".") {
+		return name
+	}
 	splitter := strings.Split(name, ".")
 	if len(splitter) == 1 {
 		return name

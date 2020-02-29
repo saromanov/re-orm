@@ -35,8 +35,8 @@ func (r *ReOrm) Save(data ...interface{}) (string, error) {
 }
 
 // GetByID provides getting of the data by id
-func (r *ReOrm) GetByID(ID, data interface{}) error {
-	return storage.Get(r.client, ID, data)
+func (r *ReOrm) GetByID(name string, ID, data interface{}) error {
+	return storage.Get(r.client, name, ID, data)
 }
 
 // DeleteByID provides removing of the data by id

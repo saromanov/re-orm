@@ -29,7 +29,7 @@ func Save(client *redis.Client, d interface{}) (string, error) {
 // save provides saving of the model
 func save(client *redis.Client, fields *models.Data, d interface{}) error {
 	ser := json.Serializer{}
-	key := fmt.Sprintf("id_%v", fields.ID)
+	key := fmt.Sprintf("id_%v_%v", fields.Name, fields.ID)
 	result, err := ser.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("unable to marshal data with id %v", err)
