@@ -27,8 +27,13 @@ func Find(client *redis.Client, d interface{}, resp interface{}) error {
 }
 
 func find(client *redis.Client, s *models.Search, d interface{}, resp interface{}) error {
-	for _, f := range s.Fields {
-		fmt.Println(f)
+	for k, v := range s.Fields {
+		fmt.Println("KEY: ", fmt.Sprintf("%v_%v", k, v))
+		members, err := client.SMembers(fmt.Sprintf("%v_%v", k, v)).Result()
+		if err != nil {
+			return fmt.Errorf("unable to find members: %v", err)
+		}
+		fmt.Println("MEMBERS: ", members)
 	}
 	return nil
 }

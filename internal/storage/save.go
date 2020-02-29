@@ -50,18 +50,19 @@ func saveIndexes(client *redis.Client, fields *models.Data, parentID string) err
 	if len(indexes) == 0 {
 		return nil
 	}
-	for _, key := range indexes {
+
+	for key, value := range indexes {
 		if err := client.HSet(key, "index", parentID).Err(); err != nil {
 			return fmt.Errorf("unable to create index %s: %v", key, err)
 		}
-		data, ok := fields.Values[key]
+		data, ok := fields.Values[value]
 		if !ok {
 			return fmt.Errorf("unable to find value %s: ", key)
 		}
-		if err := client.HSet(key, "value", data).Err(); err != nil {
+		fmt.Println("SABEKEY: ", fmt.Sprintf("%v_%v", key, data))
+		if err := client.SAdd(fmt.Sprintf("%v_%v", key, data), parentID); err != nil {
 			return fmt.Errorf("unable to create index %s: %v", key, err)
 		}
-		client.LPush(key)
 	}
 	return nil
 }

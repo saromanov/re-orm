@@ -49,7 +49,7 @@ func getFields(d interface{}) (*models.Data, error) {
 		} else {
 			resp.AddValue(dataType.Field(i).Name, f.Interface())
 			if strings.Contains(tags, "index") {
-				resp.AddIndex(fmt.Sprintf("%s_%s", resp.Name, dataType.Field(i).Name))
+				resp.AddIndex(fmt.Sprintf("%s_%s_%v", resp.Name, dataType.Field(i).Name, f.Interface()), resp.Name)
 			}
 		}
 	}

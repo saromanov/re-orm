@@ -5,13 +5,13 @@ type Data struct {
 	ID      interface{}
 	Name    string
 	Values  map[string]interface{}
-	Indexes []string
+	Indexes map[string]string
 }
 
 func NewData() *Data {
 	return &Data{
 		Values:  make(map[string]interface{}),
-		Indexes: []string{},
+		Indexes: make(map[string]string),
 	}
 }
 
@@ -21,10 +21,10 @@ func (d *Data) AddValue(key string, value interface{}) {
 }
 
 // AddIndex provides adding index to the result
-func (d *Data) AddIndex(key string) {
-	d.Indexes = append(d.Indexes, key)
+func (d *Data) AddIndex(key, value string) {
+	d.Indexes[key] = value
 }
 
-func (d *Data) GetIndexes() []string {
+func (d *Data) GetIndexes() map[string]string {
 	return d.Indexes
 }
