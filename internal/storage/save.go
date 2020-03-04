@@ -56,10 +56,11 @@ func saveIndexes(client *redis.Client, fields *models.Data, parentID string) err
 		if err := client.HSet(key, "index", parentID).Err(); err != nil {
 			return fmt.Errorf("unable to create index %s: %v", key, err)
 		}
+		key = strings.ToLower(key)
 		if ok, _ := client.SIsMember(key, parentID).Result(); ok {
 			continue
 		}
-		if err := client.SAdd(strings.ToLower(key), parentID).Err(); err != nil {
+		if err := client.SAdd(key, parentID).Err(); err != nil {
 			return fmt.Errorf("unable to add index %s %s: %v", key, parentID, err)
 		}
 	}
