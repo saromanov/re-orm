@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/go-redis/redis"
 	"github.com/saromanov/re-orm/internal/models"
@@ -29,7 +30,7 @@ func Save(client *redis.Client, d interface{}) (string, error) {
 // save provides saving of the model
 func save(client *redis.Client, fields *models.Data, d interface{}) error {
 	ser := json.Serializer{}
-	key := fmt.Sprintf("id_%v_%v", fields.Name, fields.ID)
+	key := fmt.Sprintf("id:%v:%v", fields.Name, fields.ID)
 	result, err := ser.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("unable to marshal data with id %v", err)
@@ -55,9 +56,11 @@ func saveIndexes(client *redis.Client, fields *models.Data, parentID string) err
 		if err := client.HSet(key, "index", parentID).Err(); err != nil {
 			return fmt.Errorf("unable to create index %s: %v", key, err)
 		}
-		fmt.Println("SABEKEY: ", key)
-		if err := client.SAdd(key, parentID).Err(); err != nil {
-			return fmt.Errorf("unable to create index %s %s: %v", key, parentID, err)
+		if ok, _ := client.SIsMember(key, parentID).Result(); ok {
+			continue
+		}
+		if err := client.SAdd(strings.ToLower(key), parentID).Err(); err != nil {
+			return fmt.Errorf("unable to add index %s %s: %v", key, parentID, err)
 		}
 	}
 	return nil

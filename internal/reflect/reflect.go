@@ -50,7 +50,7 @@ func getFields(d interface{}) (*models.Data, error) {
 			saveKey := dataType.Field(i).Name
 			resp.AddValue(saveKey, f.Interface())
 			if strings.Contains(tags, "index") {
-				resp.AddIndex(fmt.Sprintf("%s_%s_%v", resp.Name, dataType.Field(i).Name, f.Interface()), saveKey)
+				resp.AddIndex(fmt.Sprintf("%s:%s:%v", resp.Name, dataType.Field(i).Name, f.Interface()), saveKey)
 			}
 		}
 	}
