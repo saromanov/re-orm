@@ -33,7 +33,15 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 		if err != nil {
 			return fmt.Errorf("unable to find members: %v", err)
 		}
-		fmt.Println("MEMBERS: ", members)
+		result := []interface{}{}
+		for _, m := range members {
+			dataResp := reflect.MakeStructType(resp)
+			if err := getByKey(client, m, &dataResp); err != nil {
+				return fmt.Errorf("unable to get by the key: %v", err)
+			}
+			result = append(result, dataResp)
+		}
+		*resp = result
 	}
 	return nil
 }

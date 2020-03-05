@@ -27,6 +27,5 @@ func getByKey(client *redis.Client, name string, data interface{}) error {
 	if err != nil {
 		return errors.Wrap(err, "unable to find by the key")
 	}
-
 	return nil
 }
