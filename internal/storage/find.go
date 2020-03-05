@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	ref "reflect"
 	"strings"
 
 	"github.com/go-redis/redis"
@@ -33,15 +34,15 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 		if err != nil {
 			return fmt.Errorf("unable to find members: %v", err)
 		}
-		result := []interface{}{}
+		dataResp := reflect.MakeStructType(resp)
+		result := ref.MakeSlice(ref.SliceOf(ref.TypeOf(dataResp)), 0, 100)
 		for _, m := range members {
-			dataResp := reflect.MakeStructType(resp)
 			if err := getByKey(client, m, &dataResp); err != nil {
 				return fmt.Errorf("unable to get by the key: %v", err)
 			}
-			result = append(result, dataResp)
+			result = ref.Append(result, ref.ValueOf(dataResp))
 		}
-		*resp = result
+		resp = result
 	}
 	return nil
 }
