@@ -42,7 +42,8 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 			}
 			result = ref.Append(result, ref.ValueOf(dataResp))
 		}
-		resp = result
+		r := result.Interface()
+		resp = &r
 	}
 	return nil
 }
