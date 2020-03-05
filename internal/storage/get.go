@@ -14,7 +14,11 @@ func Get(client *redis.Client, name string, ID interface{}, data interface{}) er
 }
 
 func get(client *redis.Client, name string, ID interface{}, data interface{}) error {
-	objStr, err := client.Do("GET", fmt.Sprintf("id:%v:%v", name, ID)).String()
+	return getByKey(client, fmt.Sprintf("id:%v:%v", name, ID), data)
+}
+
+func getByKey(client *redis.Client, name string, data interface{}) error {
+	objStr, err := client.Do("GET", name).String()
 	if err != nil {
 		return errors.Wrap(err, "unable to find by the key")
 	}
