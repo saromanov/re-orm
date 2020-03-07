@@ -29,7 +29,7 @@ func Find(client *redis.Client, d interface{}, resp interface{}) error {
 
 func find(client *redis.Client, s *models.Search, d interface{}, resp interface{}) error {
 	dataResp := reflect.MakeStructType(resp)
-	result := ref.MakeSlice(ref.SliceOf(ref.TypeOf(dataResp)), 0, 100)
+	result := ref.MakeSlice(ref.SliceOf(ref.TypeOf(dataResp)), 0, 1)
 	for _, v := range s.Fields {
 		key := strings.ToLower(fmt.Sprintf("%v", v))
 		members, err := client.SMembers(key).Result()
@@ -42,9 +42,14 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 				return fmt.Errorf("unable to get by the key: %v", err)
 			}
 			result = ref.Append(result, ref.ValueOf(dataResp))
+			//result = append(result, dataResp)
 		}
 	}
 	w := result.Interface()
-	resp = &w
+	if ref.ValueOf(w).Len() == 0 {
+		return fmt.Errorf("unable to get response")
+	}
+	p := ref.New(ref.TypeOf(resp))
+	p.Elem().Set(ref.ValueOf(w))
 	return nil
 }
