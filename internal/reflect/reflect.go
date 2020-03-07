@@ -100,7 +100,7 @@ func getFullFields(d interface{}) *models.Search {
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if f.Interface() != nil && !f.IsZero() {
-			resp.Fields[typeOfT.Field(i).Name] = fmt.Sprintf("%s:%s:%v", resp.Name, typeOfT.Field(i).Name, f.Interface())
+			resp.Fields[typeOfT.Field(i).Name] = fmt.Sprintf("%s:%s:%v", strings.ToLower(typeOfT.Field(i).Name), resp.Name, f.Interface())
 		}
 	}
 	return resp

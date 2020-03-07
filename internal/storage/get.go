@@ -21,6 +21,10 @@ func Get(client *redis.Client, req, data interface{}) error {
 		return fmt.Errorf("Get: input data is not provided")
 	}
 
+	id, ok := fields.Fields["ID"]
+	if ok {
+		return getByKey(client, fmt.Sprintf("%s", id), data)
+	}
 	return nil
 }
 
@@ -41,7 +45,7 @@ func getByKey(client *redis.Client, name string, data interface{}) error {
 	b := []byte(objStr)
 	err = json.Unmarshal(b, &data)
 	if err != nil {
-		return errors.Wrap(err, "unable to find by the key")
+		return errors.Wrap(err, "unable to unmarshal data")
 	}
 	return nil
 }

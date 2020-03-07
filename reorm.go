@@ -34,6 +34,11 @@ func (r *ReOrm) Save(data ...interface{}) (string, error) {
 	return "", nil
 }
 
+// Get provides getting of the data by search request
+func (r *ReOrm) Get(resp, data interface{}) error {
+	return storage.Get(r.client, resp, data)
+}
+
 // GetByID provides getting of the data by id
 func (r *ReOrm) GetByID(name string, ID, data interface{}) error {
 	return storage.GetByID(r.client, name, ID, data)
