@@ -46,6 +46,12 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("RESP: ", resp)
+
+	var resp2 Car
+	if err := r.Get(&Car{ID: 2}, &resp2); err != nil {
+		panic(err)
+	}
+	fmt.Println("RESP2: ", resp2)
 	/*if err := r.DeleteByID(1); err != nil {
 		panic(err)
 	}
@@ -55,7 +61,7 @@ func main() {
 	fmt.Println("RESP: ", resp)*/
 	var respAll []Car
 	r.Find(&Car{
-		Color: "Black",
+		Color: "Black1",
 	}, &respAll)
 	fmt.Println("RERR: ", respAll)
 }
