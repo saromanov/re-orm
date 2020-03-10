@@ -42,7 +42,6 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 				return fmt.Errorf("unable to get by the key: %v", err)
 			}
 			result = ref.Append(result, ref.ValueOf(dataResp))
-			//result = append(result, dataResp)
 		}
 	}
 	w := result.Interface()

@@ -28,6 +28,23 @@ func Get(client *redis.Client, req, data interface{}) error {
 	return nil
 }
 
+func First(client *redis.Client, re1, data interface{}) error {
+	fields, err := reflect.GetFullFields(req)
+	if err != nil {
+		return fmt.Errorf("Get: unable to get fields from provided data: %v", err)
+	}
+
+	if len(fields.Fields) == 0 {
+		return fmt.Errorf("Get: input data is not provided")
+	}
+
+	id, ok := fields.Fields["ID"]
+	if ok {
+		return getByKey(client, fmt.Sprintf("%s", id), data)
+	}
+	return nil
+}
+
 // GetByID provides getting data by id
 func GetByID(client *redis.Client, name string, ID interface{}, data interface{}) error {
 	return get(client, name, ID, data)
