@@ -3,6 +3,7 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
@@ -28,7 +29,8 @@ func Get(client *redis.Client, req, data interface{}) error {
 	return nil
 }
 
-func First(client *redis.Client, re1, data interface{}) error {
+// First provides finding of the first element in the array
+func First(client *redis.Client, req, data interface{}) error {
 	fields, err := reflect.GetFullFields(req)
 	if err != nil {
 		return fmt.Errorf("Get: unable to get fields from provided data: %v", err)
@@ -64,5 +66,23 @@ func getByKey(client *redis.Client, name string, data interface{}) error {
 	if err != nil {
 		return errors.Wrap(err, "unable to unmarshal data")
 	}
+	return nil
+}
+
+// getByIndex provides getting of value by the index
+func getByIndex(client *redis.Client, name string, data interface{}) error {
+	name = strings.ToLower(name)
+	members, err := client.SMembers(name).Result()
+	if err != nil {
+		return fmt.Errorf("unable to get members by the name: %s", name)
+	}
+	if len(members) == 0 {
+		return fmt.Errorf("unable to find members by the name: %s", name)
+	}
+	parentID, err := client.HGet(members[0], "index").Result()
+	if err != nil {
+		return fmt.Errorf("unable to get parentID: %v", err)
+	}
+	fmt.Println("PARENTID: ", parentID)
 	return nil
 }
