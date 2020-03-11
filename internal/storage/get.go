@@ -26,7 +26,7 @@ func Get(client *redis.Client, req, data interface{}) error {
 	if ok {
 		return getByKey(client, fmt.Sprintf("%s", id), data)
 	}
-	return nil
+	return getByIndex(client, fields.Fields, data)
 }
 
 // First provides finding of the first element in the array
@@ -70,19 +70,22 @@ func getByKey(client *redis.Client, name string, data interface{}) error {
 }
 
 // getByIndex provides getting of value by the index
-func getByIndex(client *redis.Client, name string, data interface{}) error {
-	name = strings.ToLower(name)
-	members, err := client.SMembers(name).Result()
-	if err != nil {
-		return fmt.Errorf("unable to get members by the name: %s", name)
+func getByIndex(client *redis.Client, fields map[string]interface{}, data interface{}) error {
+	for name, _ := range fields {
+		name = strings.ToLower(name)
+		members, err := client.SMembers(name).Result()
+		if err != nil {
+			return fmt.Errorf("unable to get members by the name: %s", name)
+		}
+		if len(members) == 0 {
+			return fmt.Errorf("unable to find members by the name: %s", name)
+		}
+		parentID, err := client.HGet(members[0], "index").Result()
+		if err != nil {
+			return fmt.Errorf("unable to get parentID: %v", err)
+		}
+		fmt.Println("PARENTID: ", parentID)
+		return getByKey(client, parentID, data)
 	}
-	if len(members) == 0 {
-		return fmt.Errorf("unable to find members by the name: %s", name)
-	}
-	parentID, err := client.HGet(members[0], "index").Result()
-	if err != nil {
-		return fmt.Errorf("unable to get parentID: %v", err)
-	}
-	fmt.Println("PARENTID: ", parentID)
 	return nil
 }
