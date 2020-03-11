@@ -27,6 +27,7 @@ func Find(client *redis.Client, d interface{}, resp interface{}) error {
 	return find(client, fields, d, resp)
 }
 
+// general method for finding data
 func find(client *redis.Client, s *models.Search, d interface{}, resp interface{}) error {
 	dataResp := reflect.MakeStructType(resp)
 	result := ref.MakeSlice(ref.SliceOf(ref.TypeOf(dataResp)), 0, 1)
