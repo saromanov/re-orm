@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
+	"github.com/saromanov/re-orm/internal/models"
 	"github.com/saromanov/re-orm/internal/reflect"
 )
 
@@ -26,7 +27,7 @@ func Get(client *redis.Client, req, data interface{}) error {
 	if ok {
 		return getByKey(client, fmt.Sprintf("%s", id), data)
 	}
-	return getByIndex(client, fields.Fields, data)
+	return getByIndex(client, fields, data)
 }
 
 // First provides finding of the first element in the array
@@ -70,10 +71,11 @@ func getByKey(client *redis.Client, name string, data interface{}) error {
 }
 
 // getByIndex provides getting of value by the index
-func getByIndex(client *redis.Client, fields map[string]interface{}, data interface{}) error {
-	for name, _ := range fields {
-		name = strings.ToLower(name)
-		members, err := client.SMembers(name).Result()
+func getByIndex(client *redis.Client, fields *models.Search, data interface{}) error {
+	for name, value := range fields.Fields {
+		valueStr := strings.ToLower(fmt.Sprintf("%v", value))
+		fmt.Println("VALUESTR: ", valueStr)
+		members, err := client.SMembers(valueStr).Result()
 		if err != nil {
 			return fmt.Errorf("unable to get members by the name: %s", name)
 		}
