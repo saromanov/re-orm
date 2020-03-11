@@ -58,6 +58,7 @@ func get(client *redis.Client, name string, ID interface{}, data interface{}) er
 }
 
 func getByKey(client *redis.Client, name string, data interface{}) error {
+	fmt.Println("PARENTID: ", name)
 	objStr, err := client.Do("GET", name).String()
 	if err != nil {
 		return errors.Wrap(err, "unable to find by the key")
@@ -74,7 +75,6 @@ func getByKey(client *redis.Client, name string, data interface{}) error {
 func getByIndex(client *redis.Client, fields *models.Search, data interface{}) error {
 	for name, value := range fields.Fields {
 		valueStr := strings.ToLower(fmt.Sprintf("%v", value))
-		fmt.Println("VALUESTR: ", valueStr)
 		members, err := client.SMembers(valueStr).Result()
 		if err != nil {
 			return fmt.Errorf("unable to get members by the name: %s", name)
@@ -82,12 +82,7 @@ func getByIndex(client *redis.Client, fields *models.Search, data interface{}) e
 		if len(members) == 0 {
 			return fmt.Errorf("unable to find members by the name: %s", name)
 		}
-		parentID, err := client.HGet(members[0], "index").Result()
-		if err != nil {
-			return fmt.Errorf("unable to get parentID: %v", err)
-		}
-		fmt.Println("PARENTID: ", parentID)
-		return getByKey(client, parentID, data)
+		return getByKey(client, members[0], data)
 	}
 	return nil
 }
