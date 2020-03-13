@@ -4,12 +4,14 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis"
+	"github.com/saromanov/re-orm/internal/config"
 	"github.com/saromanov/re-orm/internal/storage"
 )
 
 // ReOrm provides implementation of the Redis ORM
 type ReOrm struct {
 	client *redis.Client
+	config *config.Config
 }
 
 // New initialize Redis Orm
@@ -21,6 +23,10 @@ func New(c *Config) *ReOrm {
 	})
 	return &ReOrm{
 		client: client,
+		config: &config.Config{
+			KeyPrefix: c.KeyPrefix,
+			SetType:   c.SetType,
+		},
 	}
 }
 
