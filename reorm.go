@@ -39,6 +39,11 @@ func (r *ReOrm) Get(resp, data interface{}) error {
 	return storage.Get(r.client, resp, data)
 }
 
+// Last provides getting of the last element if data is duplicated
+func (r *ReOrm) Last(resp, data interface{}) error {
+	return storage.Last(r.client, resp, data)
+}
+
 // GetByID provides getting of the data by id
 func (r *ReOrm) GetByID(name string, ID, data interface{}) error {
 	return storage.GetByID(r.client, name, ID, data)
