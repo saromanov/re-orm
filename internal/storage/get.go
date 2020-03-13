@@ -13,12 +13,12 @@ import (
 
 // Get provides getting of the saved data by request
 func Get(client *redis.Client, req, data interface{}) error {
-	return get(client, req, data, true)
+	return get(client, req, data, false)
 }
 
 // Last provides finding of the last element in the array
 func Last(client *redis.Client, req, data interface{}) error {
-	return get(client, req, data, false)
+	return get(client, req, data, true)
 }
 
 // GetByID provides getting data by id
