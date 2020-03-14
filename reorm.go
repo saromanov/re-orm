@@ -25,7 +25,7 @@ func New(c *Config) *ReOrm {
 		client: client,
 		config: &config.Config{
 			KeyPrefix: c.KeyPrefix,
-			SetType:   c.SetType,
+			SetType:   config.SetType(c.SetType),
 		},
 	}
 }
