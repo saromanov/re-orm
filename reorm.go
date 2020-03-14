@@ -67,3 +67,8 @@ func (r *ReOrm) DeleteByID(ID interface{}) error {
 func (r *ReOrm) Find(req interface{}) ([]interface{}, error) {
 	return storage.Find(r.client, req)
 }
+
+// Update provides updating of the data by request
+func (r *ReOrm) Update(id, req interface{}) error {
+	return storage.Update(r.client, id, req)
+}
