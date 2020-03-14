@@ -62,8 +62,8 @@ func (r *ReOrm) DeleteByID(ID interface{}) error {
 
 // Find provides finding of the data by non-default values
 // at the req. For example:
-// r.Find(&Car{Name: "BMW"}, &resp)
+// r.Find(&Car{Name: "BMW"})
 // And it should find by the field "Name"
-func (r *ReOrm) Find(req, data interface{}) ([]interface{}, error) {
-	return storage.Find(r.client, req, data)
+func (r *ReOrm) Find(req interface{}) ([]interface{}, error) {
+	return storage.Find(r.client, req)
 }

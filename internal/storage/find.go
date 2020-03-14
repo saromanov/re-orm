@@ -10,7 +10,7 @@ import (
 )
 
 // Find provides finding of data by filling data on the fields
-func Find(client *redis.Client, d interface{}, resp interface{}) ([]interface{}, error) {
+func Find(client *redis.Client, d interface{}) ([]interface{}, error) {
 	if ok := reflect.IsAvailableForSave(d); !ok {
 		return nil, fmt.Errorf("Find: input data have unsupported format")
 	}
@@ -23,12 +23,11 @@ func Find(client *redis.Client, d interface{}, resp interface{}) ([]interface{},
 	if len(fields.Fields) == 0 {
 		return nil, fmt.Errorf("Find: input data is not provided")
 	}
-	return find(client, fields, d, resp)
+	return find(client, fields, d)
 }
 
 // general method for finding data
-func find(client *redis.Client, s *models.Search, d interface{}, resp interface{}) ([]interface{}, error) {
-	//result := ref.MakeSlice(ref.SliceOf(ref.TypeOf(dataResp)), 0, 1)
+func find(client *redis.Client, s *models.Search, d interface{}) ([]interface{}, error) {
 	result := []interface{}{}
 	for _, v := range s.Fields {
 		key := strings.ToLower(fmt.Sprintf("%v", v))
@@ -38,11 +37,10 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 		}
 
 		for _, m := range members {
-			dataResp := reflect.MakeStructType(resp)
+			dataResp := reflect.MakeStructType(d)
 			if err := getByKey(client, m, &dataResp); err != nil {
 				return nil, fmt.Errorf("unable to get by the key: %v", err)
 			}
-			//result = ref.Append(result, ref.ValueOf(dataResp))
 			result = append(result, dataResp)
 		}
 	}
