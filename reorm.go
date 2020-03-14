@@ -64,6 +64,6 @@ func (r *ReOrm) DeleteByID(ID interface{}) error {
 // at the req. For example:
 // r.Find(&Car{Name: "BMW"}, &resp)
 // And it should find by the field "Name"
-func (r *ReOrm) Find(req, data interface{}) error {
+func (r *ReOrm) Find(req, data interface{}) ([]interface{}, error) {
 	return storage.Find(r.client, req, data)
 }
