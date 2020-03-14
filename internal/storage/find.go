@@ -28,7 +28,6 @@ func Find(client *redis.Client, d interface{}, resp interface{}) ([]interface{},
 
 // general method for finding data
 func find(client *redis.Client, s *models.Search, d interface{}, resp interface{}) ([]interface{}, error) {
-	dataResp := reflect.MakeStructType(resp)
 	//result := ref.MakeSlice(ref.SliceOf(ref.TypeOf(dataResp)), 0, 1)
 	result := []interface{}{}
 	for _, v := range s.Fields {
@@ -39,6 +38,7 @@ func find(client *redis.Client, s *models.Search, d interface{}, resp interface{
 		}
 
 		for _, m := range members {
+			dataResp := reflect.MakeStructType(resp)
 			if err := getByKey(client, m, &dataResp); err != nil {
 				return nil, fmt.Errorf("unable to get by the key: %v", err)
 			}
