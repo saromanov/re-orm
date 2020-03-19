@@ -38,20 +38,31 @@ func main() {
 			Smart:   true,
 		},
 	}
+
+	c3 := &Car{
+		ID:    3,
+		Name:  "Mercedes1",
+		Color: "Black2",
+		Attributes: Attributes{
+			Windows: 4,
+			Smart:   true,
+		},
+	}
 	r := reorm.New(&reorm.Config{})
 	fmt.Println(r.Save(c))
 	fmt.Println(r.Save(c2))
+	r.Save(c3)
 	var resp Car
 	if err := r.GetByID("Car", 1, &resp); err != nil {
 		panic(err)
 	}
-	fmt.Println("RESP: ", resp)
+	fmt.Println("Get BY ID 1: ", resp)
 
 	var resp2 Car
 	if err := r.Get(&Car{ID: 2}, &resp2); err != nil {
 		panic(err)
 	}
-	fmt.Println("RESP2: ", resp2)
+	fmt.Println("RESP ID2: ", resp2)
 
 	var resp3 Car
 	if err := r.Get(&Car{Name: "Mercedes1"}, &resp3); err != nil {
@@ -59,10 +70,20 @@ func main() {
 	}
 	fmt.Println("RESP3: ", resp3)
 
-	
-	var respAll []Car
-	r.Find(&Car{
+	var resp4 Car
+	if err := r.Last(&Car{Name: "Mercedes1"}, &resp4); err != nil {
+		panic(err)
+	}
+	fmt.Println("RESP4: ", resp4)
+
+	resInter, _ := r.Find(&Car{
 		Color: "Black1",
-	}, &respAll)
-	fmt.Println("RERR: ", respAll)
+	})
+	for _, d := range resInter {
+		fmt.Println(d.(*Car))
+	}
+
+	if err := r.Update(&Car{Name: "Mercedes1"}, &Car{Name: "Mercedes20"}); err != nil {
+		panic(err)
+	}
 }
