@@ -83,7 +83,7 @@ func main() {
 		fmt.Println(d.(*Car))
 	}
 
-	if err := r.Update(&Car{Name: "Mercedes1"}, &Car{Name: "Mercedes20"}); err != nil {
+	if err := r.Update(&Car{ID: 2, Name: "Mercedes1"}, &Car{Name: "Mercedes20"}); err != nil {
 		panic(err)
 	}
 }
