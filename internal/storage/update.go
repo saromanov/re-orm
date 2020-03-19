@@ -20,7 +20,8 @@ func update(client *redis.Client, req, rst interface{}) error {
 		return errors.Wrap(err, "unable to get value")
 	}
 
-	id, ok := resp.(map[string]interface{})
+	respMap := resp.(map[string]interface{})
+	id, ok := respMap["id"]
 	if !ok {
 		return nil
 	}
@@ -32,7 +33,13 @@ func update(client *redis.Client, req, rst interface{}) error {
 	if err != nil {
 		return err
 	}
+	if len(fields.Fields) == 0 {
+		return errors.Wrap(err, "fields is not defined")
+	}
 
-	fmt.Println("FIELDS: ", fields)
+	for key, value := range fields.Fields {
+		respMap[key] = value
+	}
+	fmt.Println("FIELDS: ", respMap)
 	return nil
 }
