@@ -8,6 +8,14 @@ import (
 	"github.com/saromanov/re-orm/internal/models"
 )
 
+type noIDError struct {
+	err string
+}
+
+func (e *noIDError) Error() string {
+	return e.err
+}
+
 // IsAvailableForSave provides check if input data is available for save
 func IsAvailableForSave(d interface{}) bool {
 	return isStruct(d) || isMap(d)
@@ -63,7 +71,7 @@ func getFields(d interface{}) (*models.Data, error) {
 		}
 	}
 	if resp.ID == nil {
-		return nil, fmt.Errorf("id is not defined")
+		return nil, &noIDError{err: "id is not defined"}
 	}
 	return resp, nil
 }
