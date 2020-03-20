@@ -31,7 +31,7 @@ func TestGetFields(t *testing.T) {
 	fields, err := GetFields(c)
 	assert.NoError(t, err)
 	assert.NotNil(t, fields)
-	assert.Equal(t, fields.Name, "*reflect.Car")
+	assert.Equal(t, fields.Name, "Car")
 	assert.Equal(t, fields.ID, c.ID)
 	values := fields.Values
 	dataName, ok := values["Name"]
