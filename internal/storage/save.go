@@ -13,7 +13,7 @@ import (
 // Save provides saving of the object
 func Save(client *redis.Client, d interface{}) (string, error) {
 	if ok := reflect.IsAvailableForSave(d); !ok {
-		return "", fmt.Errorf("save: input valus is a not struct")
+		return "", fmt.Errorf("save: input valus is a not struct or map")
 	}
 
 	fields, err := reflect.GetFields(d)

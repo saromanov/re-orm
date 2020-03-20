@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	ref "reflect"
 
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
@@ -20,8 +21,9 @@ func update(client *redis.Client, req, rst interface{}) error {
 		return errors.Wrap(err, "unable to get value")
 	}
 
+	elemData := ref.ValueOf(resp)
 	respMap := resp.(map[string]interface{})
-	id, ok := respMap["id"]
+	id, ok := respMap["ID"]
 	if !ok {
 		return nil
 	}
@@ -38,8 +40,12 @@ func update(client *redis.Client, req, rst interface{}) error {
 	}
 
 	for key, value := range fields.Fields {
-		respMap[key] = value
+		elemData.FieldByName(key).Set(ref.ValueOf(value))
 	}
-	fmt.Println("FIELDS: ", respMap)
+
+	fmt.Println("ELEMDATA: ", elemData)
+	if _, err := Save(client, elemData.Interface()); err != nil {
+		return errors.Wrap(err, "unable to save new data")
+	}
 	return nil
 }
