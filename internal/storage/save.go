@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -10,10 +11,12 @@ import (
 	"github.com/saromanov/re-orm/internal/serializer/json"
 )
 
+var errNotAvailableForSave = errors.New("save: input values is a not struct or map")
+
 // Save provides saving of the object
 func Save(client *redis.Client, d interface{}) (string, error) {
 	if ok := reflect.IsAvailableForSave(d); !ok {
-		return "", fmt.Errorf("save: input values is a not struct or map")
+		return "", errNotAvailableForSave
 	}
 
 	fields, err := reflect.GetFields(d)

@@ -43,5 +43,10 @@ func TestInvalidSave(t *testing.T) {
 
 	_, err := Save(client, a)
 	assert.Error(t, err)
-
+	_, err = Save(client, 1)
+	assert.EqualError(t, err, errNotAvailableForSave.Error())
+	_, err = Save(client, "A")
+	assert.EqualError(t, err, errNotAvailableForSave.Error())
+	_, err = Save(client, []string{"a", "b"})
+	assert.EqualError(t, err, errNotAvailableForSave.Error())
 }
