@@ -38,7 +38,10 @@ func MakeStructType(d interface{}) interface{} {
 
 // getFields returns name of fields from the structure
 func getFields(d interface{}) (*models.Data, error) {
-	s := reflect.ValueOf(d).Elem()
+	s := reflect.ValueOf(d)
+	if s.Kind() == reflect.Ptr {
+		s = s.Elem()
+	}
 	dataType := s.Type()
 	resp := models.NewData()
 	resp.Name = getName(fmt.Sprintf("%T", d))

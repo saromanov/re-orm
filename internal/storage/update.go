@@ -15,18 +15,13 @@ func Update(client *redis.Client, id, req interface{}) error {
 }
 
 func update(client *redis.Client, req, rst interface{}) error {
-	var resp interface{}
+	resp := reflect.MakeStructType(req)
 	err := get(client, req, &resp, true)
 	if err != nil {
 		return errors.Wrap(err, "unable to get value")
 	}
-
-	elemData := ref.ValueOf(resp)
-	respMap := resp.(map[string]interface{})
-	id, ok := respMap["ID"]
-	if !ok {
-		return nil
-	}
+	elemData := ref.ValueOf(resp).Elem()
+	id := elemData.FieldByName("ID").Interface()
 	if err := client.Do("DEL", fmt.Sprintf("id_%v", id)).Err(); err != nil {
 		return errors.Wrap(err, "unable to find by the key")
 	}
@@ -43,7 +38,6 @@ func update(client *redis.Client, req, rst interface{}) error {
 		elemData.FieldByName(key).Set(ref.ValueOf(value))
 	}
 
-	fmt.Println("ELEMDATA: ", elemData)
 	if _, err := Save(client, elemData.Interface()); err != nil {
 		return errors.Wrap(err, "unable to save new data")
 	}
