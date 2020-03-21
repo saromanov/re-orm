@@ -1,6 +1,7 @@
 package reflect
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -16,6 +17,8 @@ const (
 	StructSaveType
 	MapSaveType
 )
+
+var errUnsupportedType = errors.New("unsupported type for saving data")
 
 type noIDError struct {
 	err string
@@ -38,11 +41,14 @@ func IsAvailableForSave(d interface{}) SaveType {
 // GetFields provides getting fields from the struct
 func GetFields(d interface{}) (*models.Data, error) {
 	saveType := IsAvailableForSave(d)
-	if saveType == UndefinedSaveType {
-		return nil, fmt.Errorf("unable to save provided data")
+	switch saveType {
+	case StructSaveType:
+		return getFieldsFromStruct(d)
+	case MapSaveType:
+		return getFieldsFromMap(d)
 	}
 
-	return getFields(d, saveType)
+	return nil, errUnsupportedType
 }
 
 // GetFullFields provides getting non empty fields from the struct
@@ -60,8 +66,8 @@ func MakeStructType(d interface{}) interface{} {
 	return reflect.New(reflect.TypeOf(d).Elem()).Interface()
 }
 
-// getFields returns name of fields from the structure
-func getFields(d interface{}, st SaveType) (*models.Data, error) {
+// getFieldsFromStruct returns name of fields from the structure
+func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d)
 	if s.Kind() == reflect.Ptr {
 		s = s.Elem()
@@ -89,6 +95,22 @@ func getFields(d interface{}, st SaveType) (*models.Data, error) {
 	if resp.ID == nil {
 		return nil, &noIDError{err: "id is not defined"}
 	}
+	return resp, nil
+}
+
+// getFieldsFromMap returns name of fields from map
+func getFieldsFromMap(d interface{}) (*models.Data, error) {
+	s := reflect.ValueOf(d)
+	if s.Kind() == reflect.Ptr {
+		s = s.Elem()
+	}
+	rawData := d.(map[string]interface{})
+	resp := models.NewData()
+	id, ok := rawData["id"]
+	if !ok {
+		return nil, &noIDError{err: "id is not defined"}
+	}
+	resp.ID = id
 	return resp, nil
 }
 
