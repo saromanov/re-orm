@@ -13,13 +13,13 @@ type Car struct {
 }
 
 func TestIsAvailableForSave(t *testing.T) {
-	assert.False(t, IsAvailableForSave(5))
-	assert.False(t, IsAvailableForSave("a"))
-	assert.False(t, IsAvailableForSave(2.5))
-	assert.False(t, IsAvailableForSave([]string{"aaa"}))
+	assert.Equal(t, IsAvailableForSave(5), UndefinedSaveType)
+	assert.Equal(t, IsAvailableForSave("a"), UndefinedSaveType)
+	assert.Equal(t, IsAvailableForSave(2.5), UndefinedSaveType)
+	assert.Equal(t, IsAvailableForSave([]string{"aaa"}), UndefinedSaveType)
 
-	assert.True(t, IsAvailableForSave(map[string]interface{}{"a": "b"}))
-	assert.True(t, IsAvailableForSave(&Car{ID: 1, Name: "foobar"}))
+	assert.Equal(t, IsAvailableForSave(map[string]interface{}{"a": "b"}), MapSaveType)
+	assert.Equal(t, IsAvailableForSave(&Car{ID: 1, Name: "foobar"}), StructSaveType)
 }
 
 func TestGetFields(t *testing.T) {
