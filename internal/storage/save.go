@@ -15,7 +15,8 @@ var errNotAvailableForSave = errors.New("save: input values is a not struct or m
 
 // Save provides saving of the object
 func Save(client *redis.Client, d interface{}) (string, error) {
-	if ok := reflect.IsAvailableForSave(d); !ok {
+	saveType := reflect.IsAvailableForSave(d)
+	if saveType == reflect.UndefinedSaveType {
 		return "", errNotAvailableForSave
 	}
 

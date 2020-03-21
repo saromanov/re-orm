@@ -31,6 +31,13 @@ func TestSaveBasic(t *testing.T) {
 	resp, err := Save(client, a)
 	assert.NoError(t, err)
 	assert.Equal(t, resp, "")
+
+	resp, err = Save(client, map[string]interface{}{
+		"id":   2,
+		"name": "bob",
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, resp, "")
 }
 
 func TestInvalidSave(t *testing.T) {

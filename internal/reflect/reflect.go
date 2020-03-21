@@ -8,6 +8,15 @@ import (
 	"github.com/saromanov/re-orm/internal/models"
 )
 
+// SaveType defines input type for saving
+type SaveType int
+
+const (
+	UndefinedSaveType SaveType = iota + 1
+	StructSaveType
+	MapSaveType
+)
+
 type noIDError struct {
 	err string
 }
@@ -17,22 +26,29 @@ func (e *noIDError) Error() string {
 }
 
 // IsAvailableForSave provides check if input data is available for save
-func IsAvailableForSave(d interface{}) bool {
-	return isStruct(d) || isMap(d)
+func IsAvailableForSave(d interface{}) SaveType {
+	if isStruct(d) {
+		return StructSaveType
+	} else if isMap(d) {
+		return MapSaveType
+	}
+	return UndefinedSaveType
 }
 
 // GetFields provides getting fields from the struct
 func GetFields(d interface{}) (*models.Data, error) {
-	if ok := IsAvailableForSave(d); !ok {
+	saveType := IsAvailableForSave(d)
+	if saveType == UndefinedSaveType {
 		return nil, fmt.Errorf("unable to save provided data")
 	}
 
-	return getFields(d)
+	return getFields(d, saveType)
 }
 
 // GetFullFields provides getting non empty fields from the struct
 func GetFullFields(d interface{}) (*models.Search, error) {
-	if ok := IsAvailableForSave(d); !ok {
+	saveType := IsAvailableForSave(d)
+	if saveType == UndefinedSaveType {
 		return nil, fmt.Errorf("unable to save provided data")
 	}
 
@@ -45,7 +61,7 @@ func MakeStructType(d interface{}) interface{} {
 }
 
 // getFields returns name of fields from the structure
-func getFields(d interface{}) (*models.Data, error) {
+func getFields(d interface{}, st SaveType) (*models.Data, error) {
 	s := reflect.ValueOf(d)
 	if s.Kind() == reflect.Ptr {
 		s = s.Elem()
@@ -86,12 +102,6 @@ func getName(name string) string {
 		return name
 	}
 	return splitter[1]
-}
-
-// parseTags provides checks of the tags at the input
-// and if it contains any tags, its adding to the result
-func parseTags(tags string, data *models.Data) {
-
 }
 
 // check if struct contains struct field
