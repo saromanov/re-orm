@@ -111,6 +111,9 @@ func getFieldsFromMap(d interface{}) (*models.Data, error) {
 		return nil, &noIDError{err: "id is not defined"}
 	}
 	resp.ID = id
+	for key, value := range rawData {
+		resp.AddValue(key, value)
+	}
 	return resp, nil
 }
 
