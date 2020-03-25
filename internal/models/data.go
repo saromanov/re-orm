@@ -2,12 +2,13 @@ package models
 
 // Data provides inserting of the values
 type Data struct {
-	ID      interface{}
-	Name    string
-	Values  map[string]interface{}
-	Indexes map[string]string
+	PrimaryKey interface{}
+	Name       string
+	Values     map[string]interface{}
+	Indexes    map[string]string
 }
 
+// NewData provides initialization of the data
 func NewData() *Data {
 	return &Data{
 		Values:  make(map[string]interface{}),

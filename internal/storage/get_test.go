@@ -22,3 +22,15 @@ func TestGetSimple(t *testing.T) {
 	assert.Equal(t, resp.ID, 1)
 	assert.Equal(t, resp.Name, "Bob")
 }
+
+func TestGetWIthoutIndex(t *testing.T) {
+	a := &Animal{
+		ID:    1,
+		Title: "Dog",
+	}
+	_, err := Save(client, a)
+	assert.NoError(t, err)
+
+	var resp Animal
+	assert.Error(t, Get(client, &Animal{Title: "Dog"}, &resp))
+}

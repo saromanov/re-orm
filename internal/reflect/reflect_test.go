@@ -32,7 +32,7 @@ func TestGetFields(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, fields)
 	assert.Equal(t, fields.Name, "Car")
-	assert.Equal(t, fields.ID, c.ID)
+	assert.Equal(t, fields.PrimaryKey, c.ID)
 	values := fields.Values
 	dataName, ok := values["Name"]
 	assert.True(t, ok)

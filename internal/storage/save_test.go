@@ -23,7 +23,7 @@ type Animal struct {
 type AnimalExtend struct {
 	ID    string
 	Title string
-	Name  string
+	Name  string `reorm:"index"`
 	Color string
 	Type  int
 	Sound Sound
@@ -50,6 +50,7 @@ func TestSaveBasic(t *testing.T) {
 	assert.Equal(t, resp, "")
 
 	a2 := &AnimalExtend{
+		ID:    "aaa",
 		Title: "Dog",
 		Name:  "Bob",
 		Color: "Black",
@@ -75,6 +76,7 @@ func TestSaveBasic(t *testing.T) {
 	assert.Equal(t, respData.Name, "Bob")
 
 	var respData2 AnimalExtend
+	assert.NotEqual(t, respData2.ID, "")
 	assert.NoError(t, Get(client, &AnimalExtend{Name: "Bob"}, &respData2))
 	assert.Equal(t, respData2.Name, "Bob")
 	assert.Equal(t, respData2.Sound.Message, "Data")

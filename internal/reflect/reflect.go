@@ -79,7 +79,7 @@ func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if dataType.Field(i).Name == "ID" {
-			resp.ID = generateID(dataType.Field(i), f.Interface())
+			resp.PrimaryKey = generateID(dataType.Field(i), f.Interface())
 			continue
 		}
 		tags := dataType.Field(i).Tag.Get("reorm")
@@ -93,8 +93,8 @@ func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 			}
 		}
 	}
-	if resp.ID == nil {
-		return nil, &noIDError{err: "id is not defined"}
+	if resp.PrimaryKey == nil {
+		return nil, &noIDError{err: "primary key is not defined"}
 	}
 	return resp, nil
 }
@@ -121,7 +121,7 @@ func getFieldsFromMap(d interface{}) (*models.Data, error) {
 	if !ok {
 		return nil, &noIDError{err: "id is not defined"}
 	}
-	resp.ID = id
+	resp.PrimaryKey = id
 	for key, value := range rawData {
 		resp.AddValue(key, value)
 	}
