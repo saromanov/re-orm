@@ -20,6 +20,10 @@ type Animal struct {
 	Type  int
 }
 
+type Music struct {
+	ID int
+}
+
 func TestSaveBasic(t *testing.T) {
 	a := &Animal{
 		ID:    1,
@@ -38,6 +42,11 @@ func TestSaveBasic(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, resp, "")
+
+	var respData Animal
+	assert.NoError(t, Get(client, &Animal{ID: 1}, &respData))
+	assert.Equal(t, respData.ID, 1)
+	assert.Equal(t, respData.Name, "Bob")
 }
 
 func TestInvalidSave(t *testing.T) {
