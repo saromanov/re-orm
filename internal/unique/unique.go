@@ -1,4 +1,4 @@
-// package unique defines generation of id's for data
+// Package unique defines generation of id's for data
 package unique
 
 import (
@@ -7,6 +7,5 @@ import (
 
 // GenerateID provides generating of ids on UUID
 func GenerateID() string {
-	return guuid.New().String()
+	return uuid.New().String()
 }
-
