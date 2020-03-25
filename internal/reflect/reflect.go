@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/saromanov/re-orm/internal/models"
+	"github.com/saromanov/re-orm/internal/unique"
 )
 
 // SaveType defines input type for saving
@@ -78,7 +79,7 @@ func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 		if dataType.Field(i).Name == "ID" {
-			resp.ID = f.Interface()
+			resp.ID = generateID(dataType.Field(i), f.Interface())
 			continue
 		}
 		tags := dataType.Field(i).Tag.Get("reorm")
@@ -96,6 +97,16 @@ func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 		return nil, &noIDError{err: "id is not defined"}
 	}
 	return resp, nil
+}
+
+// generateID provides generating of id
+// if input id is not empty then return id
+func generateID(sf reflect.StructField, value interface{}) interface{} {
+	if sf.Type.Kind() == reflect.String {
+		return unique.GenerateID()
+	}
+
+	return value
 }
 
 // getFieldsFromMap returns name of fields from map
