@@ -20,6 +20,19 @@ type Animal struct {
 	Type  int
 }
 
+type AnimalExtend struct {
+	ID    string
+	Title string
+	Name  string
+	Color string
+	Type  int
+	Sound Sound
+}
+
+type Sound struct {
+	Message string
+}
+
 type Music struct {
 	ID int
 }
@@ -36,6 +49,19 @@ func TestSaveBasic(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, resp, "")
 
+	a2 := &AnimalExtend{
+		Title: "Dog",
+		Name:  "Bob",
+		Color: "Black",
+		Type:  1,
+		Sound: Sound{
+			Message: "Data",
+		},
+	}
+	resp, err = Save(client, a2)
+	assert.NoError(t, err)
+	assert.Equal(t, resp, "")
+
 	resp, err = Save(client, map[string]interface{}{
 		"id":   2,
 		"name": "bob",
@@ -47,6 +73,11 @@ func TestSaveBasic(t *testing.T) {
 	assert.NoError(t, Get(client, &Animal{ID: 1}, &respData))
 	assert.Equal(t, respData.ID, 1)
 	assert.Equal(t, respData.Name, "Bob")
+
+	var respData2 AnimalExtend
+	assert.NoError(t, Get(client, &AnimalExtend{Name: "Bob"}, &respData2))
+	assert.Equal(t, respData2.Name, "Bob")
+	assert.Equal(t, respData2.Sound.Message, "Data")
 }
 
 func TestInvalidSave(t *testing.T) {
