@@ -178,7 +178,14 @@ func getFullFieldsFromStruct(s reflect.Value, d interface{}) *models.Search {
 }
 
 func getFullFieldsFromMap(s reflect.Value, d interface{}) *models.Search {
-	return nil
+	resp := &models.Search{}
+	resp.Fields = map[string]interface{}{}
+	resp.Name = getName(fmt.Sprintf("%T", d))
+	m := d.(map[string]interface{})
+	for k, v := range m {
+		resp.Fields[k] = fmt.Sprintf("%s:%s:%v", resp.Name, resp.Name, v)
+	}
+	return resp
 }
 
 // isStruct provides checking if input data is a struct
