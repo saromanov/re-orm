@@ -50,6 +50,14 @@ func TestGetFields(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 1, fields.PrimaryKey)
 	assert.Equal(t, 2, len(fields.Values))
+	fields, err = GetFields(&m)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, fields.PrimaryKey)
+	assert.Equal(t, 2, len(fields.Values))
+	_, err = GetFields(&map[string]interface{}{
+		"foo": "bar",
+	})
+	assert.Error(t, err)
 
 }
 

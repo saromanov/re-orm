@@ -114,7 +114,7 @@ func generateID(sf reflect.StructField, value interface{}) interface{} {
 func getFieldsFromMap(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d)
 	if s.Kind() == reflect.Ptr {
-		s = s.Elem()
+		d = s.Elem().Interface()
 	}
 	rawData := d.(map[string]interface{})
 	resp := models.NewData()
