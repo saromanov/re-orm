@@ -3,6 +3,7 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
+	ref "reflect"
 	"strings"
 
 	"github.com/go-redis/redis"
@@ -26,6 +27,14 @@ func GetByID(client *redis.Client, name string, ID interface{}, data interface{}
 	return getByKey(client, fmt.Sprintf("id:%v:%v", name, ID), data)
 }
 
+// GetValueByField provides getting of the value from the field
+// for example: &Car{ID: 1, Name: "BMW"}
+// GetValue(client, "Car", "Name", &Car{ID: 1})
+// returns Car object
+func GetValueByField(client *redis.Client, name, field string, req, data interface{}) error {
+	return getValueByField(client, name, field, req, data)
+}
+
 // general method for get value
 func get(client *redis.Client, req, data interface{}, asc bool) error {
 	fields, err := reflect.GetFullFields(req)
@@ -42,6 +51,19 @@ func get(client *redis.Client, req, data interface{}, asc bool) error {
 		return getByKey(client, fmt.Sprintf("%s", id), data)
 	}
 	return getByIndex(client, fields, asc, data)
+}
+
+// note: unsupported for maps at this moment
+func getValueByField(client *redis.Client, name, field string, req, data interface{}) error {
+	var resp interface{}
+	if err := get(client, req, &resp, false); err != nil {
+		return fmt.Errorf("unable to get value: %v", err)
+	}
+
+	valueStr := ref.ValueOf(resp)
+	value := valueStr.FieldByName(name)
+	fmt.Println("VALUE: ", value.Interface())
+	return nil
 }
 
 func getByKey(client *redis.Client, name string, data interface{}) error {
