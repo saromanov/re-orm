@@ -3,7 +3,6 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
-	ref "reflect"
 	"strings"
 
 	"github.com/go-redis/redis"
@@ -60,9 +59,13 @@ func getValueByField(client *redis.Client, name, field string, req, data interfa
 		return fmt.Errorf("unable to get value: %v", err)
 	}
 
-	valueStr := ref.ValueOf(resp)
-	value := valueStr.FieldByName(name)
-	fmt.Println("VALUE: ", value.Interface())
+	d := resp.(map[string]interface{})
+	for k, v := range d {
+		if k == field {
+			data = v
+			return nil
+		}
+	}
 	return nil
 }
 
