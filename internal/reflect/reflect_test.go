@@ -49,3 +49,13 @@ func TestGetFullFields(t *testing.T) {
 	assert.NotNil(t, fields)
 	assert.Equal(t, len(fields.Fields), 1)
 }
+
+func TestGetMapFields(t *testing.T) {
+	d := map[string]interface{}{
+		"id": 1,
+		"name":"foobar",
+	}
+	fields, err := GetFullFields(d)
+	assert.NoError(t, err)
+	assert.NotNil(t, fields)
+}

@@ -149,7 +149,17 @@ func isStructField(sf reflect.StructField) bool {
 
 // getFullFields retruns filled fields from the input data
 func getFullFields(d interface{}) *models.Search {
-	s := reflect.ValueOf(d).Elem()
+	s := reflect.ValueOf(d)
+	if s.Kind() == reflect.Ptr {
+		s = s.Elem()
+	}
+	if s.Kind() == reflect.Struct {
+		return getFullFieldsFromStruct(s, d)
+	}
+	return nil
+}
+
+func getFullFieldsFromStruct(s reflect.Value, d interface{}) *models.Search {
 	typeOfT := s.Type()
 	resp := &models.Search{}
 	resp.Fields = map[string]interface{}{}
