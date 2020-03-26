@@ -63,6 +63,7 @@ func GetFullFields(d interface{}) (*models.Search, error) {
 }
 
 // MakeStructType provides making of the struct type for response(find)
+// it needs for correct type after the Find request
 func MakeStructType(d interface{}) interface{} {
 	return reflect.New(reflect.TypeOf(d).Elem()).Interface()
 }

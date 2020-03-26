@@ -9,7 +9,7 @@ import (
 type Car struct {
 	ID    int64
 	Name  string
-	Colot string
+	Color string
 }
 
 func TestIsAvailableForSave(t *testing.T) {
@@ -20,6 +20,10 @@ func TestIsAvailableForSave(t *testing.T) {
 
 	assert.Equal(t, IsAvailableForSave(map[string]interface{}{"a": "b"}), MapSaveType)
 	assert.Equal(t, IsAvailableForSave(&Car{ID: 1, Name: "foobar"}), StructSaveType)
+	assert.Equal(t, IsAvailableForSave(Car{ID: 1, Name: "foobar"}), StructSaveType)
+
+	m := map[string]interface{}{"a": "b"}
+	assert.Equal(t, IsAvailableForSave(&m), MapSaveType)
 }
 
 func TestGetFields(t *testing.T) {
@@ -77,4 +81,8 @@ func TestGetMapFullFields(t *testing.T) {
 	fields, err := GetFullFields(d)
 	assert.NoError(t, err)
 	assert.NotNil(t, fields)
+}
+
+func TestMakeStructType(t *testing.T) {
+	assert.Equal(t, &Car{}, MakeStructType(&Car{}))
 }
