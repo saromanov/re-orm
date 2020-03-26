@@ -37,6 +37,22 @@ func TestGetFields(t *testing.T) {
 	dataName, ok := values["Name"]
 	assert.True(t, ok)
 	assert.Equal(t, dataName, c.Name)
+
+	m := map[string]interface{}{
+		"id":  1,
+		"foo": "bar",
+	}
+	fields, err = GetFields(m)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, fields.PrimaryKey)
+	assert.Equal(t, 2, len(fields.Values))
+
+}
+
+func TestGetUnsupportedFields(t *testing.T) {
+	fields, err := GetFields(10)
+	assert.Error(t, err, errUnsupportedType)
+	assert.Nil(t, fields, nil)
 }
 
 func TestGetFullFields(t *testing.T) {
@@ -48,12 +64,15 @@ func TestGetFullFields(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, fields)
 	assert.Equal(t, len(fields.Fields), 1)
+
+	_, err = GetFullFields(1)
+	assert.Error(t, err)
 }
 
-func TestGetMapFields(t *testing.T) {
+func TestGetMapFullFields(t *testing.T) {
 	d := map[string]interface{}{
-		"id": 1,
-		"name":"foobar",
+		"id":   1,
+		"name": "foobar",
 	}
 	fields, err := GetFullFields(d)
 	assert.NoError(t, err)

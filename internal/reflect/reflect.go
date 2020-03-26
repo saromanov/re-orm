@@ -153,8 +153,11 @@ func getFullFields(d interface{}) *models.Search {
 	if s.Kind() == reflect.Ptr {
 		s = s.Elem()
 	}
-	if s.Kind() == reflect.Struct {
+	switch s.Kind() {
+	case reflect.Struct:
 		return getFullFieldsFromStruct(s, d)
+	case reflect.Map:
+		return getFullFieldsFromMap(s, d)
 	}
 	return nil
 }
@@ -171,6 +174,10 @@ func getFullFieldsFromStruct(s reflect.Value, d interface{}) *models.Search {
 		}
 	}
 	return resp
+}
+
+func getFullFieldsFromMap(s reflect.Value, d interface{}) *models.Search {
+	return nil
 }
 
 // isStruct provides checking if input data is a struct
