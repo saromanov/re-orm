@@ -62,7 +62,10 @@ func getValueByField(client *redis.Client, name, field string, req, data interfa
 	d := resp.(map[string]interface{})
 	for k, v := range d {
 		if k == field {
-			data = v
+			switch e := item.(string) {
+			case *Student:
+				*item = e
+			}
 			return nil
 		}
 	}
