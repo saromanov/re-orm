@@ -76,8 +76,8 @@ func TestSaveBasic(t *testing.T) {
 	assert.Equal(t, respData.Name, "Bob")
 
 	var respData2 AnimalExtend
-	assert.NotEqual(t, respData2.ID, "")
 	assert.NoError(t, Get(client, &AnimalExtend{Name: "Bob"}, &respData2))
+	assert.NotEqual(t, respData2.ID, "")
 	assert.Equal(t, respData2.Name, "Bob")
 	assert.Equal(t, respData2.Sound.Message, "Data")
 }
