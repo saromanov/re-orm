@@ -18,6 +18,24 @@ type Attributes struct {
 	Smart   bool
 }
 
+type AnimalExtend struct {
+	ID    string
+	Title string
+	Name  string `reorm:"index"`
+	Color string
+	Type  int
+	Sound Sound
+}
+
+type Sound struct {
+	Message string
+}
+
+type WithoutDefault struct {
+	Message string
+	Name    string `reorm:"primaryKey"`
+}
+
 func main() {
 	c := &Car{
 		ID:    1,
@@ -86,4 +104,37 @@ func main() {
 	if err := r.Update(&Car{ID: 2, Name: "Mercedes1"}, &Car{Name: "Mercedes20"}); err != nil {
 		panic(err)
 	}
+
+	var resp6 Car
+	if err := r.Get(&Car{ID: 2}, &resp6); err != nil {
+		panic(err)
+	}
+	fmt.Println("RESP6: ", resp6)
+
+	a2 := &AnimalExtend{
+		Title: "Dog",
+		Name:  "Bob",
+		Color: "Black",
+		Type:  1,
+		Sound: Sound{
+			Message: "Data",
+		},
+	}
+	_, err := r.Save(a2)
+	if err != nil {
+		panic(err)
+	}
+
+	var resp7 AnimalExtend
+	if err := r.Get(&AnimalExtend{Name: "Bob"}, &resp7); err != nil {
+		panic(err)
+	}
+	fmt.Println("RESP6: ", resp7)
+
+	var resp8 string
+	if err := r.GetValueByField("Car", "Name", &Car{ID: 1}, &resp8); err != nil {
+		panic(err)
+	}
+	fmt.Println("ATTR: ", resp8)
+
 }
