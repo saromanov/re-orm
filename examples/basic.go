@@ -131,10 +131,11 @@ func main() {
 	}
 	fmt.Println("RESP6: ", resp7)
 
-	var resp8 string
-	if err := r.GetValueByField("Car", "Name", &Car{ID: 1}, &resp8); err != nil {
+	resp8, err := r.GetValueByField("Car", "Name", &Car{ID: 1})
+	if err != nil {
 		panic(err)
 	}
-	fmt.Println("ATTR: ", resp8)
+
+	fmt.Println("ATTR: ", resp8.(string))
 
 }

@@ -47,8 +47,8 @@ func (r *ReOrm) Get(resp, data interface{}) error {
 
 // GetValueByField provides getting of the data by the field
 // from the struct
-func (r *ReOrm) GetValueByField(name, field string, req, data interface{}) error {
-	return storage.GetValueByField(r.client, name, field, req, data)
+func (r *ReOrm) GetValueByField(name, field string, req interface{}) (interface{}, error) {
+	return storage.GetValueByField(r.client, name, field, req)
 }
 
 // Last provides getting of the last element if data is duplicated

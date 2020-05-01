@@ -30,8 +30,8 @@ func GetByID(client *redis.Client, name string, ID interface{}, data interface{}
 // for example: &Car{ID: 1, Name: "BMW"}
 // GetValue(client, "Car", "Name", &Car{ID: 1})
 // returns Car object
-func GetValueByField(client *redis.Client, name, field string, req, data interface{}) error {
-	return getValueByField(client, name, field, req, data)
+func GetValueByField(client *redis.Client, name, field string, req interface{}) (interface{}, error) {
+	return getValueByField(client, name, field, req)
 }
 
 // general method for get value
@@ -53,23 +53,19 @@ func get(client *redis.Client, req, data interface{}, asc bool) error {
 }
 
 // note: unsupported for maps at this moment
-func getValueByField(client *redis.Client, name, field string, req, data interface{}) error {
+func getValueByField(client *redis.Client, name, field string, req interface{}) (interface{}, error) {
 	var resp interface{}
 	if err := get(client, req, &resp, false); err != nil {
-		return fmt.Errorf("unable to get value by name %s and field %s: %v", err, name, field)
+		return nil, fmt.Errorf("unable to get value by name %s and field %s: %v", err, name, field)
 	}
 
 	d := resp.(map[string]interface{})
 	for k, v := range d {
 		if k == field {
-			switch e := item.(string) {
-			case *Student:
-				*item = e
-			}
-			return nil
+			return v, nil
 		}
 	}
-	return nil
+	return nil, nil
 }
 
 func getByKey(client *redis.Client, name string, data interface{}) error {
