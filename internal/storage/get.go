@@ -56,7 +56,7 @@ func get(client *redis.Client, req, data interface{}, asc bool) error {
 func getValueByField(client *redis.Client, name, field string, req, data interface{}) error {
 	var resp interface{}
 	if err := get(client, req, &resp, false); err != nil {
-		return fmt.Errorf("unable to get value: %v", err)
+		return fmt.Errorf("unable to get value by name %s and field %s: %v", err, name, field)
 	}
 
 	d := resp.(map[string]interface{})
