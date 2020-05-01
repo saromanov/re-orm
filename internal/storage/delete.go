@@ -13,8 +13,11 @@ func DeleteByID(client *redis.Client, ID interface{}) error {
 }
 
 func delete(client *redis.Client, ID interface{}) error {
+	if ID == nil {
+		return errors.New("ID argument is nil")
+	}
 	if err := client.Do("DEL", fmt.Sprintf("id_%v", ID)).Err(); err != nil {
-		return errors.Wrap(err, "unable to find by the key")
+		return errors.Wrap(err, fmt.Sprintf("unable to find by the key %v", ID))
 	}
 
 	return nil
