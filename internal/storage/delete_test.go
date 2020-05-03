@@ -24,6 +24,9 @@ func TestDelete(t *testing.T) {
 
 	var resp2 Animal
 	assert.NoError(t, DeleteByID(client, Animal{}, 1))
-	assert.NoError(t, Get(client, &Animal{ID: 1}, &resp2))
+	assert.Error(t, Get(client, &Animal{ID: 1}, &resp2))
 	assert.Equal(t, 0, resp2.ID)
+
+	assert.Error(t, DeleteByID(client, Animal{}, nil))
+	assert.NoError(t, DeleteByID(client, nil, 50))
 }

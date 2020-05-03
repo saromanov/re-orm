@@ -39,7 +39,6 @@ func save(client *redis.Client, fields *models.Data, d interface{}) error {
 	if err != nil {
 		return fmt.Errorf("unable to marshal data with id %v", err)
 	}
-	fmt.Println("KEYYY: ", key)
 	err = client.Do("SET", key, string(result)).Err()
 	if err != nil {
 		return fmt.Errorf("unable to set data: %v", err)

@@ -70,10 +70,14 @@ func MakeStructType(d interface{}) interface{} {
 }
 
 // GetType returns name of the type
-func GetType(myvar interface{}) string {
-	t := reflect.TypeOf(myvar)
-    if t.Kind() == reflect.Ptr {
-        return "*" + t.Elem().Name()
+func GetType(v interface{}) string {
+	saveType := IsAvailableForSave(v)
+	if saveType == UndefinedSaveType {
+		return ""
+	}
+	t := reflect.TypeOf(v)
+	if t.Kind() == reflect.Ptr {
+		return "*" + t.Elem().Name()
 	}
 	return t.Name()
 }

@@ -14,11 +14,10 @@ func DeleteByID(client *redis.Client, req, ID interface{}) error {
 }
 
 func delete(client *redis.Client, req, ID interface{}) error {
-	fmt.Printf("SSS: %v", reflect.GetType(req))
 	if ID == nil {
 		return errors.New("ID argument is nil")
 	}
-	if err := client.Do("DEL", fmt.Sprintf("id_%v", ID)).Err(); err != nil {
+	if err := client.Do("DEL", fmt.Sprintf("id:%v:%v", reflect.GetType(req), ID)).Err(); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to find by the key %v", ID))
 	}
 
