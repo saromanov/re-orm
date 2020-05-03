@@ -62,8 +62,8 @@ func (r *ReOrm) GetByID(name string, ID, data interface{}) error {
 }
 
 // DeleteByID provides removing of the data by id
-func (r *ReOrm) DeleteByID(ID interface{}) error {
-	return storage.DeleteByID(r.client, ID)
+func (r *ReOrm) DeleteByID(req interface{}, ID interface{}) error {
+	return storage.DeleteByID(r.client, req, ID)
 }
 
 // Find provides finding of the data by non-default values
