@@ -69,6 +69,15 @@ func MakeStructType(d interface{}) interface{} {
 	return reflect.New(reflect.TypeOf(d).Elem()).Interface()
 }
 
+// GetType returns name of the type
+func GetType(myvar interface{}) string {
+	t := reflect.TypeOf(myvar)
+    if t.Kind() == reflect.Ptr {
+        return "*" + t.Elem().Name()
+	}
+	return t.Name()
+}
+
 // getFieldsFromStruct returns name of fields from the structure
 func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 	s := reflect.ValueOf(d)

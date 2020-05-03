@@ -5,14 +5,16 @@ import (
 
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
+	"github.com/saromanov/re-orm/internal/reflect"
 )
 
 // DeleteByID provides deleting data by id
-func DeleteByID(client *redis.Client, ID interface{}) error {
-	return delete(client, ID)
+func DeleteByID(client *redis.Client, req, ID interface{}) error {
+	return delete(client, req, ID)
 }
 
-func delete(client *redis.Client, ID interface{}) error {
+func delete(client *redis.Client, req, ID interface{}) error {
+	fmt.Printf("SSS: %v", reflect.GetType(req))
 	if ID == nil {
 		return errors.New("ID argument is nil")
 	}
