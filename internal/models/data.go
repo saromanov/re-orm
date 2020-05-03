@@ -26,6 +26,7 @@ func (d *Data) AddIndex(key, value string) {
 	d.Indexes[key] = value
 }
 
+// GetIndexes returns pre defined indexes
 func (d *Data) GetIndexes() map[string]string {
 	return d.Indexes
 }

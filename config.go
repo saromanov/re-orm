@@ -2,11 +2,13 @@ package reorm
 
 import "github.com/saromanov/re-orm/internal/serializer"
 
-// SetType defines type for teh set for index insering
+// SetType defines type for the set for index insering
 type SetType int
 
 var (
+	// ZADD provides definition of the type for inserting
 	ZADD SetType = 0
+	// SADD provides definition of the type for inserting
 	SADD SetType = 1
 )
 

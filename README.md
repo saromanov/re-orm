@@ -1,4 +1,6 @@
 # re-orm
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/saromanov/re-orm)](https://goreportcard.com/report/github.com/saromanov/re-orm)
 Implementation of ORM for Redis
 
 Its supports mapping of the project, etc...

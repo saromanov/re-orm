@@ -14,6 +14,7 @@ import (
 type SaveType int
 
 const (
+	// UndefinedSaveType provides definition of the safe type
 	UndefinedSaveType SaveType = iota + 1
 	StructSaveType
 	MapSaveType
