@@ -33,10 +33,6 @@ type Sound struct {
 	Message string
 }
 
-type Music struct {
-	ID int
-}
-
 func TestSaveBasic(t *testing.T) {
 	a := &Animal{
 		ID:    1,

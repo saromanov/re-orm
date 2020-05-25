@@ -6,12 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type Car struct {
-	ID    int64
-	Name  string
-	Colot string
-}
-
 func TestData(t *testing.T) {
 	d := NewData()
 	d.AddIndex("foo", "bar")
