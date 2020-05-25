@@ -15,6 +15,10 @@ var errNotAvailableForSave = errors.New("save: input values is a not struct or m
 
 // Save provides saving of the object
 func Save(client *redis.Client, d interface{}) (string, error) {
+
+	if d == nil {
+		return "", fmt.Errorf("request attribute is empty")
+	}
 	saveType := reflect.IsAvailableForSave(d)
 	if saveType == reflect.UndefinedSaveType {
 		return "", errNotAvailableForSave

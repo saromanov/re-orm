@@ -15,6 +15,13 @@ func Update(client *redis.Client, id, req interface{}) error {
 }
 
 func update(client *redis.Client, req, rst interface{}) error {
+
+	if req == nil {
+		return fmt.Errorf("request attribute is empty")
+	}
+	if rst == nil {
+		return fmt.Errorf("response attribute is empty")
+	}
 	resp := reflect.MakeStructType(req)
 	err := get(client, req, &resp, true)
 	if err != nil {
