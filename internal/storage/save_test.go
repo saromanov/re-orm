@@ -14,7 +14,7 @@ var client = redis.NewClient(&redis.Options{
 
 type Animal struct {
 	ID    int
-	Title string
+	Title string `reorm:"index"`
 	Name  string
 	Color string
 	Type  int
