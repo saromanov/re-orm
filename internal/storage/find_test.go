@@ -34,6 +34,9 @@ func TestFind(t *testing.T) {
 	_, err = Find(client, &Animal{})
 	assert.Error(t, err)
 
-	_, err = Find(client, &Car{})
-	assert.Error(t, err)
+	res2, err := Find(client, &Car{
+		Name: "123",
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, 0, len(res2))
 }
