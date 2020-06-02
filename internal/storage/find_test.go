@@ -17,8 +17,9 @@ func TestFind(t *testing.T) {
 	_, err := Save(client, a)
 	assert.NoError(t, err)
 
-	var resp []Animal
-	res, err := Find(client, &resp)
+	res, err := Find(client, &Animal{
+		Title: "Dog",
+	})
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(res))
 }
