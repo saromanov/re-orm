@@ -4,6 +4,8 @@
 
 [![codebeat badge](https://codebeat.co/badges/11d674c7-5f58-4ec4-a770-1106aa71829f)](https://codebeat.co/projects/github-com-saromanov-re-orm-master)
 
+[![Build Status](https://dev.azure.com/xxsmotur/re-orm/_apis/build/status/saromanov.re-orm?branchName=master)](https://dev.azure.com/xxsmotur/re-orm/_build/latest?definitionId=1&branchName=master)
+
 
 Implementation of ORM for Redis
 
