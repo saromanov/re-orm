@@ -40,6 +40,15 @@ func IsAvailableForSave(d interface{}) SaveType {
 	return UndefinedSaveType
 }
 
+// IsAvailableForFind returns true of input data is availabe for find
+func IsAvailableForFind(d interface{}) bool {
+	ptr := reflect.ValueOf(d).Kind()
+	if ptr != reflect.Ptr {
+		return false
+	}
+	return reflect.ValueOf(d).Type().Elem().Kind() == reflect.Slice
+}
+
 // GetFields provides getting fields from the struct
 func GetFields(d interface{}) (*models.Data, error) {
 	saveType := IsAvailableForSave(d)

@@ -11,8 +11,7 @@ import (
 
 // Find provides finding of data by filling data on the fields
 func Find(client *redis.Client, d interface{}) ([]interface{}, error) {
-	saveType := reflect.IsAvailableForSave(d)
-	if saveType == reflect.UndefinedSaveType {
+	if ok := reflect.IsAvailableForFind(d); !ok {
 		return nil, fmt.Errorf("Find: input data have unsupported format")
 	}
 
@@ -31,6 +30,9 @@ func Find(client *redis.Client, d interface{}) ([]interface{}, error) {
 func find(client *redis.Client, s *models.Search, d interface{}) ([]interface{}, error) {
 	result := []interface{}{}
 	for _, v := range s.Fields {
+		if v == nil {
+			continue
+		}
 		key := strings.ToLower(fmt.Sprintf("%v", v))
 		members, err := client.SMembers(key).Result()
 		if err != nil {
