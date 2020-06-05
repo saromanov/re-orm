@@ -94,3 +94,25 @@ func TestGetMapFullFields(t *testing.T) {
 func TestMakeStructType(t *testing.T) {
 	assert.Equal(t, &Car{}, MakeStructType(&Car{}))
 }
+
+func TestGetType(t *testing.T) {
+	var s string
+	s = "foobar"
+	assert.Equal(t, "", GetType(s))
+
+	assert.Equal(t, "*Car", GetType(&Car{
+		Name: "foobar",
+	}))
+	assert.Equal(t, "Car", GetType(Car{
+		Name: "foorbar",
+	}))
+}
+
+func TestIsAvailableForFind(t *testing.T) {
+	assert.False(t, IsAvailableForFind("a"))
+	assert.False(t, IsAvailableForFind(1))
+	assert.False(t, IsAvailableForFind(nil))
+
+	var cars []Car
+	assert.True(t, IsAvailableForFind(&cars))
+}
