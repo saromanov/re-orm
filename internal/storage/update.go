@@ -33,10 +33,10 @@ func update(client *redis.Client, req, rst interface{}) error {
 		return errors.Wrap(err, "unable to find by the key")
 	}
 
-	return getFullFieldsAndSave(elemData, rst)
+	return getFullFieldsAndSave(client, elemData, rst)
 }
 
-func getFullFieldsAndSave(elemData ref.Value, rst interface{}) error {
+func getFullFieldsAndSave(client *redis.Client, elemData ref.Value, rst interface{}) error {
 	fields, err := reflect.GetFullFields(rst)
 	if err != nil {
 		return err
@@ -49,6 +49,10 @@ func getFullFieldsAndSave(elemData ref.Value, rst interface{}) error {
 		elemData.FieldByName(key).Set(ref.ValueOf(value))
 	}
 
+	return saveFullFields(client, elemData)
+}
+
+func saveFullFields(client *redis.Client, elemData ref.Value) error {
 	if _, err := Save(client, elemData.Interface()); err != nil {
 		return errors.Wrap(err, "unable to save new data")
 	}
