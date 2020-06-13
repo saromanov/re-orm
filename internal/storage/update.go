@@ -10,8 +10,8 @@ import (
 )
 
 // Update provides updating of the data
-func Update(client *redis.Client, id, req interface{}) error {
-	return update(client, id, req)
+func Update(client *redis.Client, query, req interface{}) error {
+	return update(client, query, req)
 }
 
 func update(client *redis.Client, req, rst interface{}) error {
@@ -21,6 +21,13 @@ func update(client *redis.Client, req, rst interface{}) error {
 	}
 	if rst == nil {
 		return fmt.Errorf("response attribute is empty")
+	}
+
+	if reflect.IsAvailableForSave(req) == reflect.UndefinedSaveType {
+		return fmt.Errorf("unable to validate request data")
+	}
+	if reflect.IsAvailableForSave(rst) == reflect.UndefinedSaveType {
+		return fmt.Errorf("unable to validate data for response")
 	}
 	resp := reflect.MakeStructType(req)
 	err := get(client, req, &resp, true)

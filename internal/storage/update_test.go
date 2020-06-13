@@ -18,7 +18,11 @@ func TestUpdate(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, resp, "")
 
-	assert.NoError(t, Update(client, 1, &Animal{
+	assert.NoError(t, Update(client, &Animal{ID: 1}, &Animal{
+		Title: "John",
+	}))
+
+	assert.Error(t, Update(client, 1, &Animal{
 		Title: "John",
 	}))
 }
