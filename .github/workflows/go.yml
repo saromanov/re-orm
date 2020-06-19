@@ -35,3 +35,9 @@ jobs:
     
     - name: Test
       run: go test ./...
+
+    - name: Super-Linter
+      uses: github/super-linter@v2.1.0
+      env:
+        VALIDATE_GO: true
+    
