@@ -17,7 +17,6 @@ on:
         name: Build
         runs-on: ubuntu-latest
         steps:
-    
         - name: Set up Go 1.14
           uses: actions/setup-go@v1
           with:
@@ -40,6 +39,4 @@ on:
           uses: github/super-linter@v2.1.0
           env:
             VALIDATE_GO: true
-      env:
-        VALIDATE_GO: true
     
