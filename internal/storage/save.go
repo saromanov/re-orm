@@ -11,13 +11,16 @@ import (
 	"github.com/saromanov/re-orm/internal/serializer/json"
 )
 
-var errNotAvailableForSave = errors.New("save: input values is a not struct or map")
+var (
+	errNotAvailableForSave = errors.New("save: input values is a not struct or map")
+	errEmptyInput          = errors.New("save: request attribute is empty")
+)
 
 // Save provides saving of the object
 func Save(client *redis.Client, d interface{}) (string, error) {
 
 	if d == nil {
-		return "", fmt.Errorf("request attribute is empty")
+		return "", errEmptyInput
 	}
 	saveType := reflect.IsAvailableForSave(d)
 	if saveType == reflect.UndefinedSaveType {
