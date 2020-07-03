@@ -8,8 +8,12 @@ import (
 
 type Car struct {
 	ID    int64
-	Name  string
+	Name  string `reorm:"index"`
 	Color string
+}
+
+type CarWithoutIndex struct {
+	Name string
 }
 
 func TestIsAvailableForSave(t *testing.T) {
@@ -41,6 +45,7 @@ func TestGetFields(t *testing.T) {
 	dataName, ok := values["Name"]
 	assert.True(t, ok)
 	assert.Equal(t, dataName, c.Name)
+	assert.Equal(t, 1, len(fields.GetIndexes()))
 
 	m := map[string]interface{}{
 		"id":  1,
@@ -115,4 +120,18 @@ func TestIsAvailableForFind(t *testing.T) {
 
 	var cars []Car
 	assert.True(t, IsAvailableForFind(&cars))
+}
+
+func TestNoError(t *testing.T) {
+	n := noIDError{err: "test"}
+	assert.Equal(t, n.Error(), "test")
+}
+
+func TestFieldsNonDefaultIndex(t *testing.T) {
+	c := &CarWithoutIndex{
+		Name: "foobar",
+	}
+
+	_, err := GetFields(c)
+	assert.Error(t, err)
 }

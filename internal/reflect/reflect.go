@@ -117,6 +117,7 @@ func getFieldsFromStruct(d interface{}) (*models.Data, error) {
 			}
 		}
 	}
+	fmt.Println("RESP: ", resp.PrimaryKey)
 	if resp.PrimaryKey == nil {
 		return nil, &noIDError{err: "primary key is not defined"}
 	}
