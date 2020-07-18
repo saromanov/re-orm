@@ -66,7 +66,7 @@ func main() {
 			Smart:   true,
 		},
 	}
-	r := reorm.New(&reorm.Config{})
+	r, err := reorm.New(&reorm.Config{Address: "localhost:6379"})
 	fmt.Println(r.Save(c))
 	fmt.Println(r.Save(c2))
 	r.Save(c3)
@@ -120,7 +120,7 @@ func main() {
 			Message: "Data",
 		},
 	}
-	err := r.Save(a2)
+	err = r.Save(a2)
 	if err != nil {
 		panic(err)
 	}

@@ -15,7 +15,13 @@ type ReOrm struct {
 }
 
 // New initialize Redis Orm
-func New(c *Config) *ReOrm {
+func New(c *Config) (*ReOrm, error) {
+	if c == nil {
+		return nil, fmt.Errorf("config is not defined")
+	}
+	if c.Address == "" {
+		return nil, fmt.Errorf("address to redis is not defined")
+	}
 	client := redis.NewClient(&redis.Options{
 		Addr:     c.Address,
 		Password: c.Password,
@@ -27,7 +33,7 @@ func New(c *Config) *ReOrm {
 			KeyPrefix: c.KeyPrefix,
 			SetType:   config.SetType(c.SetType),
 		},
-	}
+	}, nil
 }
 
 // Save provides saving of the data. Also, it returns stored id
