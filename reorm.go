@@ -31,13 +31,13 @@ func New(c *Config) *ReOrm {
 }
 
 // Save provides saving of the data. Also, it returns stored id
-func (r *ReOrm) Save(data ...interface{}) (string, error) {
+func (r *ReOrm) Save(data ...interface{}) error {
 	for _, d := range data {
 		if _, err := storage.Save(r.client, d); err != nil {
-			return "", fmt.Errorf("unable to save data: %v", err)
+			return fmt.Errorf("unable to save data: %v", err)
 		}
 	}
-	return "", nil
+	return nil
 }
 
 // Get provides getting of the data by search request

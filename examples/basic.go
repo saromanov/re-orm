@@ -120,7 +120,7 @@ func main() {
 			Message: "Data",
 		},
 	}
-	_, err := r.Save(a2)
+	err := r.Save(a2)
 	if err != nil {
 		panic(err)
 	}
